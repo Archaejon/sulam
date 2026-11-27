@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Sulam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Frank+Ruhl+Libre:wght@400;500;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one phone-width column under the night sky of Jacob's dream. A ladder of light rises toward a glow
+   that changes colour and brightens with each world. Deliberately single-theme (night); every colour is set explicitly. */
+:root{
+  --void:#05061A; --bg:#05061A; --sky:#0B0E2B;
+  --surface:rgba(17,21,52,.78); --surface-solid:#11153A; --surface-2:rgba(255,255,255,.045);
+  --ink:#EFEADF; --muted:#A3A6C4; --line:rgba(226,188,110,.22); --line-soft:rgba(255,255,255,.09);
+  --gold:#E2BC6E; --gold-bright:#F8E4AE; --gold-deep:#A57A2E; --gold-soft:rgba(226,188,110,.13);
+  --accent:#E2BC6E; --accent-ink:#1A1306; --gevurah:#C2423A; --danger:#F08A7E; --danger-soft:rgba(240,138,126,.14);
+  --t-BG:#E07A62; --t-SV:#E3A452; --t-SP:#C9C45A; --t-CV:#C9C45A; --t-CP:#62BE97; --t-I:#7CA6E6; --clean:#E2BC6E;
+  --world:#D07A3A; --lift:0;
+  --font-display:"Cormorant Garamond", "Frank Ruhl Libre", Georgia, serif;
+  --font-inscr:"Cinzel", "Cormorant Garamond", Georgia, serif;
+  --font-he:"Frank Ruhl Libre", "David Libre", "Times New Roman", serif;
+  --font-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r:10px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--void);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,label.act:focus-within{outline:2px solid var(--gold-bright);outline-offset:2px}
+a{color:var(--gold)}
+::selection{background:var(--gold);color:var(--accent-ink)}
+
+/* the heavens: deep gradient, a world-coloured glow from above, stars */
+.heavens{position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,var(--sky) 0%,var(--void) 62%)}
+.heavens::before{content:"";position:absolute;inset:-10% -30% 30%;background:radial-gradient(55% 55% at 50% 0%,var(--world) 0%,transparent 70%);opacity:calc(.20 + .42*var(--lift));transition:background 1.2s,opacity 1.2s}
+.heavens::after{content:"";position:absolute;left:50%;top:0;width:min(46vw,260px);height:70vh;transform:translateX(-50%);background:linear-gradient(180deg,rgba(255,244,214,.10),transparent 80%);filter:blur(18px);opacity:calc(.35 + .65*var(--lift))}
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+.he{font-family:var(--font-he);direction:rtl;unicode-bidi:isolate}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;text-wrap:balance;margin:0;line-height:1.1;letter-spacing:.005em}
+.app{position:relative;z-index:1;max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px calc(104px + env(safe-area-inset-bottom,0px))}
+.eyebrow{font-family:var(--font-inscr);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.card{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);padding:18px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.btn{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:10px 18px;font-weight:600;letter-spacing:.01em;transition:background .2s,box-shadow .2s}
+.btn:hover{background:rgba(255,255,255,.08)}
+.btn.primary,.btn.gold{background:linear-gradient(180deg,var(--gold-bright),var(--gold) 55%,var(--gold-deep));border-color:var(--gold);color:var(--accent-ink);box-shadow:0 0 0 1px rgba(248,228,174,.25) inset,0 8px 28px -10px rgba(226,188,110,.55)}
+.btn.primary:hover,.btn.gold:hover{box-shadow:0 0 0 1px rgba(248,228,174,.4) inset,0 10px 36px -8px rgba(226,188,110,.7)}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.block{width:100%;padding:14px 18px;font-size:15.5px}
+.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.btn.primary:disabled{background:var(--surface-2);color:var(--muted);border-color:var(--line)}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 11px;font-size:11.5px;font-weight:600;border:1px solid var(--line);letter-spacing:.03em}
+.pill.ok{color:var(--gold);border-color:var(--gold)}
+.pill.bad{color:var(--danger);border-color:var(--danger)}
+.pill.back{color:var(--muted)}
+.num{font-variant-numeric:lining-nums tabular-nums}
+
+/* banner */
+.banner{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--gold-soft);border:1px solid var(--line);color:var(--ink);border-radius:var(--r);padding:10px 14px;font-size:13.5px}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-family:var(--font-inscr);font-size:17px;font-weight:600;letter-spacing:.32em;display:flex;align-items:center}
+.brand .he{font-size:20px;color:var(--gold);margin-left:10px;letter-spacing:0;font-weight:500}
+.top .pill{font-family:var(--font-inscr);letter-spacing:.12em;font-size:10.5px;color:var(--gold)}
+
+/* hero: title + the ladder of light */
+.hero{display:grid;grid-template-columns:1fr 112px;gap:8px;align-items:end;min-height:236px}
+.hero-text{display:flex;flex-direction:column;gap:6px;padding-bottom:6px;min-width:0}
+.hero .eyebrow{color:var(--world);filter:brightness(1.35)}
+.hero h1{font-size:40px;line-height:1;font-weight:600}
+.hero .he{font-size:21px;color:var(--gold);text-align:left;display:block}
+.thesis{font-family:var(--font-display);font-style:italic;font-size:17px;line-height:1.35;color:var(--muted);margin:8px 0 0}
+.hero-ladder{width:112px;height:236px;display:block;overflow:visible}
+.position h1{font-size:34px}
+
+/* budget */
+.budget-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.big{font-family:var(--font-display);font-size:52px;font-weight:600;line-height:.95;font-variant-numeric:lining-nums tabular-nums}
+.big .unit{font-family:var(--font-body);font-size:15px;font-weight:500;color:var(--muted)}
+.bar{height:8px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;display:flex;margin:16px 0 8px}
+.bar span{height:100%;display:block}
+.bar.over{box-shadow:0 0 0 1px var(--danger)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}
+.day{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.dot{width:30px;height:30px;border-radius:50%;border:1px dashed rgba(255,255,255,.18);display:grid;place-items:center;font-size:9.5px;font-weight:700;color:var(--accent-ink)}
+.dot.today{border:1.5px solid var(--gold-bright);box-shadow:0 0 14px -2px var(--gold)}
+.dot.clean{border:none;background:radial-gradient(circle at 50% 35%,var(--gold-bright),var(--gold) 60%,var(--gold-deep));box-shadow:0 0 12px -3px var(--gold)}
+.dot.slip{border:none;opacity:.9}
+.dot.missed{border:1.5px dashed var(--danger)}
+.ceiling{display:flex;gap:6px 14px;flex-wrap:wrap;align-items:center;font-size:13.5px;margin-top:14px;color:var(--muted)}
+.ceiling b{color:var(--ink);font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line-soft);font-size:12.5px;font-weight:600}
+
+/* sefirah card */
+.sefirah{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+.glyph{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:var(--gold-bright);font-family:var(--font-he);font-size:26px;font-weight:500;background:radial-gradient(circle,rgba(226,188,110,.22),rgba(226,188,110,.04) 70%);border:1px solid var(--line);box-shadow:0 0 24px -6px var(--gold)}
+.sefirah h3{font-size:23px}
+
+/* quote: the words of the sages get the most beautiful type on the page */
+.quote{position:relative}
+.quote .he{font-size:22px;line-height:1.6;display:block;margin-bottom:8px;color:var(--gold-bright)}
+.quote p{margin:0;font-family:var(--font-display);font-style:italic;font-size:19.5px;line-height:1.4}
+.quote .src{margin-top:12px;font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;font-family:var(--font-body)}
+.quote .src span{font-family:var(--font-inscr);letter-spacing:.12em;font-size:10.5px;text-transform:uppercase}
+.quote.feature{background:transparent;border:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;padding:22px 4px;text-align:center;backdrop-filter:none}
+.quote.feature .he{font-size:25px}
+.quote.feature p{font-size:21px}
+.quote.feature .src{justify-content:center;gap:16px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);padding:14px 8px;text-align:center}
+.stat b{font-family:var(--font-display);font-size:34px;font-weight:600;display:block;line-height:1;color:var(--gold-bright);font-variant-numeric:lining-nums}
+.stat span{font-family:var(--font-inscr);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* tab bar */
+.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(6,7,26,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:8px max(12px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));z-index:20}
+.tabs-in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end}
+.tab{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted);padding:4px 0;letter-spacing:.02em}
+.tab svg{width:22px;height:22px}
+.tab[aria-current="page"]{color:var(--gold-bright);font-weight:600}
+.tab[aria-current="page"] svg{filter:drop-shadow(0 0 6px rgba(226,188,110,.6))}
+.tab.sos{margin-top:-24px;color:#F3A097;font-weight:600}
+.tab.sos .sosbtn{width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 50% 35%,#E05A4F,var(--gevurah) 60%,#7E2520);color:#FFF4EE;display:grid;place-items:center;font-family:var(--font-inscr);font-weight:700;font-size:13px;letter-spacing:.14em;border:3px solid var(--void);box-shadow:0 0 0 1px rgba(242,140,130,.45),0 0 28px -4px rgba(194,66,58,.8)}
+
+/* ladder tab */
+.world{--wc:var(--gold);border:1px solid var(--line-soft);border-radius:var(--r);background:var(--surface);overflow:hidden;position:relative}
+.world.current{border-color:var(--wc);box-shadow:0 0 44px -14px var(--wc)}
+.world-head{position:relative;padding:16px;display:flex;justify-content:space-between;gap:10px;align-items:flex-end;flex-wrap:wrap;border-bottom:1px solid var(--line-soft)}
+.world-head::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--wc),transparent);opacity:.16;pointer-events:none}
+.world-head > *{position:relative}
+.world-head h3{font-size:28px}
+.world-head .he{color:var(--wc);font-size:22px;filter:brightness(1.25)}
+.world-head .eyebrow{color:var(--wc);filter:brightness(1.3)}
+.world-desc{padding:12px 16px 4px;font-size:13.5px;color:var(--muted);margin:0}
+.rungs{padding:8px 16px 16px;display:flex;flex-direction:column;gap:4px}
+.rung{display:grid;grid-template-columns:46px 1fr auto;gap:10px;align-items:center;padding:7px 10px;border-radius:8px;border:1px solid transparent;font-size:13.5px}
+.rung .wk{font-variant-numeric:tabular-nums;color:var(--muted);font-size:11.5px}
+.rung .mix{font-size:12px;color:var(--muted)}
+.rung.done{color:var(--muted)}
+.rung.done .name::before{content:"✦ ";color:var(--gold)}
+.rung.here{border-color:var(--gold);background:var(--gold-soft);font-weight:600;box-shadow:0 0 20px -8px var(--gold)}
+.rung.here .wk{color:var(--gold-bright)}
+.summit{text-align:center;padding:26px 18px;border:1px solid var(--line);border-radius:var(--r);background:radial-gradient(80% 120% at 50% 0%,rgba(255,250,235,.16),transparent 70%),var(--surface)}
+.summit.reached{border-color:var(--gold-bright);box-shadow:0 0 60px -12px var(--gold-bright)}
+.summit b{font-family:var(--font-display);font-size:26px;font-weight:600;display:block}
+
+/* wisdom */
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{border:1px solid var(--line-soft);background:var(--surface-2);border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600}
+.filters button[aria-pressed="true"]{background:var(--gold);color:var(--accent-ink);border-color:var(--gold)}
+
+/* journal */
+.hist{display:flex;flex-direction:column}
+.hrow{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.hrow:last-child{border-bottom:none}
+.hbar{grid-column:1/-1;height:5px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}
+.hbar span{display:block;height:100%;background:var(--gold)}
+.hbar.over span{background:var(--danger)}
+.trig{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;border-bottom:1px solid var(--line-soft)}
+label{font-size:13px;font-weight:600;display:block;margin-bottom:5px}
+input[type=text],input[type=tel],textarea{width:100%;border:1px solid var(--line-soft);background:rgba(0,0,0,.25);color:var(--ink);border-radius:8px;padding:11px 12px;font:inherit}
+textarea{min-height:88px;resize:vertical}
+
+/* sheets */
+.scrim{position:fixed;inset:0;background:rgba(3,4,14,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:linear-gradient(180deg,#151A44,var(--surface-solid) 140px);border:1px solid var(--line);border-bottom:none;width:100%;max-width:560px;max-height:92%;overflow-y:auto;border-radius:18px 18px 0 0;padding:20px max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:up .26s ease-out;box-shadow:0 -20px 60px -20px rgba(226,188,110,.25)}
+@keyframes up{from{transform:translateY(28px);opacity:.6}to{transform:none;opacity:1}}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.sheet-head h2{font-size:28px}
+.x{border:1px solid var(--line-soft);background:var(--surface-2);border-radius:50%;width:34px;height:34px;font-size:18px;line-height:1;color:var(--muted)}
+.steps{display:flex;gap:5px;margin-bottom:14px}
+.steps i{flex:1;height:3px;border-radius:999px;background:rgba(255,255,255,.1)}
+.steps i.on{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.tierlist{display:flex;flex-direction:column;gap:8px}
+.tierrow{display:grid;grid-template-columns:10px 1fr auto;gap:12px;align-items:center;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:10px;padding:10px 12px}
+.tierrow i{width:10px;height:10px;border-radius:50%}
+.tierrow small{display:block;color:var(--muted);font-size:12px}
+.tierrow small.warn{color:var(--danger)}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:18px;line-height:1;color:var(--gold)}
+.stepper b{min-width:18px;text-align:center}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choices button{border:1px solid var(--line-soft);background:var(--surface-2);border-radius:999px;padding:8px 14px;font-size:13.5px}
+.choices button[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-bright);font-weight:600}
+.note{font-size:13px;color:var(--muted);border-left:2px solid var(--gold);padding:4px 0 4px 12px}
+
+/* SOS */
+.sos-screen{position:fixed;inset:0;z-index:50;background:radial-gradient(90% 50% at 50% 30%,rgba(194,66,58,.16),transparent 70%),var(--void);overflow-y:auto}
+.sos-in{max-width:560px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:16px}
+.sos-in h2{font-size:30px}
+.breath{width:200px;height:200px;margin:6px auto 0;position:relative;display:grid;place-items:center}
+.breath .ring{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(248,228,174,.22) 0%,rgba(226,188,110,.05) 55%,transparent 70%);border:1px solid var(--gold);box-shadow:0 0 50px -6px var(--gold),inset 0 0 30px -10px var(--gold);animation:breathe 10s ease-in-out infinite}
+.breath .t{position:relative;font-family:var(--font-display);font-size:50px;font-weight:600;font-variant-numeric:lining-nums tabular-nums;color:var(--gold-bright)}
+.breath .cue{position:absolute;bottom:-28px;font-size:13px;color:var(--muted);width:100%;text-align:center;font-family:var(--font-display);font-style:italic;font-size:16px}
+@keyframes breathe{0%{transform:scale(.72)}40%{transform:scale(1)}100%{transform:scale(.72)}}
+.acts{display:flex;flex-direction:column;gap:8px}
+.act{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line-soft);border-radius:10px;padding:11px 12px;font-size:14px;font-weight:400;margin:0}
+.act input{margin-top:4px;accent-color:var(--gold)}
+.foot{font-size:12px;color:var(--muted);text-align:center;padding:8px 0}
+
+/* moments of light: climbing a rung, conquering an urge */
+.moment{position:fixed;inset:0;z-index:90;display:grid;place-items:center;background:rgba(3,4,14,.9);text-align:center;padding:24px max(24px,env(safe-area-inset-right,0px)) 24px max(24px,env(safe-area-inset-left,0px));overflow:hidden;cursor:pointer}
+.moment .beam{position:absolute;left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%) scaleY(0);transform-origin:bottom;background:linear-gradient(180deg,rgba(255,250,235,0),var(--gold-bright) 45%,rgba(255,250,235,0));box-shadow:0 0 40px 8px rgba(226,188,110,.35);animation:beam 1.3s cubic-bezier(.2,.8,.2,1) forwards}
+.moment .burst{position:absolute;left:50%;top:44%;width:14px;height:14px;border-radius:50%;background:#FFF8E6;box-shadow:0 0 60px 30px rgba(248,228,174,.7),0 0 180px 90px rgba(226,188,110,.35);transform:translate(-50%,-50%) scale(0);animation:burst 1.8s .35s cubic-bezier(.2,.8,.2,1) forwards}
+.moment .msg{position:relative;text-shadow:0 0 16px #05061A,0 0 6px #05061A,0 0 2px #05061A;max-width:420px;display:flex;flex-direction:column;gap:10px;align-items:center;opacity:0;animation:rise 1s .9s ease-out forwards}
+.moment .msg h2{font-size:42px;line-height:1.02}
+.moment .msg .he{font-size:24px;color:var(--gold-bright)}
+.moment .msg p{margin:0;color:var(--muted)}
+.moment .spark{position:absolute;bottom:-10px;width:3px;height:3px;border-radius:50%;background:var(--gold-bright);box-shadow:0 0 8px 2px rgba(248,228,174,.7);animation:float linear forwards}
+@keyframes beam{to{transform:translateX(-50%) scaleY(1)}}
+@keyframes burst{0%{transform:translate(-50%,-50%) scale(0);opacity:0}25%{opacity:1}100%{transform:translate(-50%,-50%) scale(9);opacity:.06}}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes float{from{transform:translateY(0);opacity:0}15%{opacity:1}to{transform:translateY(-105vh);opacity:0}}
+@keyframes glowpulse{0%,100%{opacity:.55}50%{opacity:1}}
+.rung-glow{animation:glowpulse 3s ease-in-out infinite}
+
+/* PIN lock */
+.lock{position:fixed;inset:0;z-index:70;background:radial-gradient(70% 45% at 50% 0%,rgba(226,188,110,.16),transparent 70%),var(--void);display:grid;place-items:center;padding:calc(24px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.lock-in{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;max-width:320px;width:100%}
+body.locked .app,body.locked .tabs,body.locked #layer{visibility:hidden}
+.pin-dots{display:flex;gap:16px;justify-content:center}
+.pin-dots i{width:12px;height:12px;border-radius:50%;border:1px solid var(--gold)}
+.pin-dots i.on{background:var(--gold-bright);box-shadow:0 0 10px var(--gold)}
+.pin-dots.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pin-msg{min-height:20px;font-size:13px;color:var(--danger)}
+.keypad{display:grid;grid-template-columns:repeat(3,68px);gap:14px;justify-content:center}
+.keypad button{width:68px;height:68px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);font-size:26px;font-family:var(--font-display);font-weight:600;color:var(--ink)}
+.keypad button:active{background:var(--gold-soft)}
+
+/* kedushah strand: a rose-gold second light, for the honour of women and the Shechinah between husband and wife */
+.kedushah{border-color:rgba(233,182,166,.26);background:radial-gradient(120% 80% at 100% 0%,rgba(233,170,150,.11),transparent 60%),var(--surface)}
+.kedushah > .eyebrow,.covenant .eyebrow{color:#E9B6A6}
+.kedushah h3{font-size:25px;margin-top:4px}
+.covenant{margin-top:14px;padding-top:12px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:9px}
+.cov{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start;font-size:14px;color:var(--muted)}
+.cov.new{color:var(--ink)}
+.cov em{font-style:normal;font-size:10.5px;color:#E9B6A6;font-weight:600;letter-spacing:.04em;white-space:nowrap}
+.seal{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;border:1px solid var(--gold);color:var(--gold)}
+.cov.new .seal{background:var(--gold);color:var(--accent-ink);box-shadow:0 0 12px -2px var(--gold)}
+.covrow{display:flex;flex-direction:column;gap:8px;font-size:14px;padding:10px 12px;border:1px solid var(--line-soft);border-radius:10px;background:var(--surface-2)}
+.covrow .choices button{padding:6px 12px;font-size:12.5px}
+
+@media (prefers-reduced-motion:reduce){
+  .breath .ring,.sheet,.pin-dots.shake,.rung-glow{animation:none}
+  .moment .beam{animation:none;transform:translateX(-50%)}
+  .moment .burst,.moment .spark{display:none}
+  .moment .msg{animation:none;opacity:1}
+}
+</style>
+</head>
+<body>
+<div class="heavens" aria-hidden="true"></div>
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="app" id="app"></div>
+<nav class="tabs" aria-label="Main">
+  <div class="tabs-in">
+    <button class="tab" data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>Today</button>
+    <button class="tab" data-tab="ladder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 2v20M17 2v20M7 6h10M7 10h10M7 14h10M7 18h10"/></svg>Ladder</button>
+    <button class="tab sos" data-tab="sos" aria-label="Urge help"><span class="sosbtn">SOS</span>Urge</button>
+    <button class="tab" data-tab="wisdom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/></svg>Wisdom</button>
+    <button class="tab" data-tab="journal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>Journal</button>
+  </div>
+</nav>
+<div id="layer"></div>
+<div id="lock" class="lock" hidden></div>
+
+<script>
+/* ============ Model ============ */
+const TIERS = {
+  BG:{w:5,name:"Boy-girl"}, SV:{w:4,name:"Solo video"}, SP:{w:3,name:"Solo picture"},
+  CV:{w:3,name:"Clothed video"}, CP:{w:2,name:"Clothed picture"}, I:{w:1,name:"Imagination"}
+};
+const TIER_ORDER = ["BG","SV","SP","CV","CP","I"];
+const PHASE_MIX = [ // [higher tier label, lower tier label] for each world
+  ["BG","SV"], ["SV","SP/CV"], ["SP/CV","CP"], ["CP","I"], ["I",null]
+];
+const WORLDS = [
+  {name:"Asiyah", he:"עֲשִׂיָּה", sheb:"שבעשיה", en:"World of Action",
+   desc:"The work is in the body and the habit. Here you change what you do. Boy-girl content gives way to solo video."},
+  {name:"Yetzirah", he:"יְצִירָה", sheb:"שביצירה", en:"World of Formation",
+   desc:"The work moves into feeling. You start to notice the loneliness or stress that comes before the urge. Solo video gives way to solo pictures or clothed video."},
+  {name:"Beriah", he:"בְּרִיאָה", sheb:"שבבריאה", en:"World of Creation",
+   desc:"The work moves into the mind. Images lose their grip as thought is reshaped. Pictures and clothed video give way to clothed pictures."},
+  {name:"Atzilut", he:"אֲצִילוּת", sheb:"שבאצילות", en:"World of Emanation",
+   desc:"Very little stands between you and the Source. Clothed pictures give way to imagination alone."},
+  {name:"Adam Kadmon", he:"אָדָם קַדְמוֹן", sheb:"שבאדם קדמון", en:"Primordial Will",
+   desc:"Even imagination is given back. Frequency falls week by week until nothing remains but will."}
+];
+// The glow from above: ember, sapphire, violet, gold, white light, and the summit's dawn.
+const WORLD_COLORS = ["#D07A3A","#4F7FE6","#9C7BEA","#EFCB72","#F4F2FF","#FFF2D2"];
+const SEFIROT = [
+  {name:"Chesed", he:"חֶסֶד", g:"ח", theme:"Loving-kindness", practice:"Do one act of kindness each day that nobody sees. Love pointed outward softens the craving pointed inward."},
+  {name:"Gevurah", he:"גְּבוּרָה", g:"ג", theme:"Strength and boundaries", practice:"Set one firm boundary with your devices this week, such as a time, a room or a filter, and keep it."},
+  {name:"Tiferet", he:"תִּפְאֶרֶת", g:"ת", theme:"Truth and balance", practice:"Log every day honestly, even the hard ones. The seal of the Holy One is truth (Shabbat 55a)."},
+  {name:"Netzach", he:"נֵצַח", g:"נ", theme:"Endurance", practice:"When an urge comes, outlast it. Open the urge timer and stay with it the full ten minutes at least once."},
+  {name:"Hod", he:"הוֹד", g:"ה", theme:"Humility and gratitude", practice:"Each night write down three things you are grateful for. Admit you need help, and tell your chaver how the week is going."},
+  {name:"Yesod", he:"יְסוֹד", g:"י", theme:"Foundation and covenant", practice:"This is the week of Yosef HaTzaddik and shemirat habrit. Say Tikkun HaKlali once, and look for real connection with the people around you."},
+  {name:"Malchut", he:"מַלְכוּת", g:"מ", theme:"Sovereignty and presence", practice:"Be master of your time. Plan tomorrow tonight, and leave no empty hour for the yetzer to fill."}
+];
+/* The second strand of the ladder: kedushah. Each world has a teaching on women, intimacy and marriage,
+   and adds one covenant commitment that stays in force for the rest of the climb. */
+const KEDUSHAH = [
+  {title:"She is not content", teach:"Every image was a real woman: someone's daughter, someone's sister, created in the image of God. Pornography trains the eye to take. The Torah trains it to honour.",
+   commit:{single:"End casual encounters. Physical intimacy waits for the covenant of marriage.", married:"No secrets: no hidden apps, chats or accounts."}},
+  {title:"Not good to be alone", teach:"Loneliness drives the urge, and a screen cannot cure it. Real closeness heals it: with friends, with family, and with a wife. In this world you learn to be known.",
+   commit:{single:"Delete the dating apps. Meet with marriage in mind, through friends, community or a shadchan.", married:"Fifteen minutes a day of undistracted talk with your wife, with the phone in another room."}},
+  {title:"In the image of God", teach:"Beriah reshapes the mind. Learn to see every woman as a whole person, a tzelem Elokim, and a wife as an ezer kenegdo: a partner who stands opposite you as an equal.",
+   commit:{single:"No rating, staring or objectifying talk about women, in speech or in thought.", married:"No rating, staring or objectifying talk about women, in speech or in thought."}},
+  {title:"One soul in two bodies", teach:"The Zohar teaches that husband and wife are one soul, divided before birth and reunited in marriage. The Torah calls intimacy “knowing”. Physical union is meant to express a closeness of hearts and souls that is already built.",
+   commit:{single:"Learn about marriage each week: shalom bayit, taharat hamishpachah, and what it means to be a husband.", married:"Renew your closeness: time alone together each week, and one honest word of appreciation every day."}},
+  {title:"Building the home", teach:"At the root is will. Everything you have conquered becomes the foundation of a home where the Shechinah can dwell. When a man and woman are worthy, the Shechinah rests between them.",
+   commit:{single:"Write down the home you want to build and the husband you are becoming. Pray each day for the wife you will meet.", married:"Sing Eshet Chayil on Friday night with real intention, and pray for your wife every day."}}
+];
+const STAGES = {single:"Single, preparing for marriage", dating:"Dating or engaged", married:"Married"};
+function track(){ return state.stage==="married" ? "married" : "single"; }
+function covenant(w){ const p = w>=FINAL ? 5 : phaseOf(w); return KEDUSHAH.slice(0,p).map(k=>k.commit[track()]); }
+const TRIGGERS = ["Hungry","Angry","Lonely","Tired","Stressed","Bored","Late night","Phone in bed","Alone at home","Saw something online","Dating apps","Conflict with someone","Celebrating"];
+const FENCES = ["Phone charges outside the bedroom","No screens after 23:00","Filter turned on and the password given to my chaver","Message my chaver when an urge starts","Delete the dating apps from my phone","Call a friend instead of swiping or scrolling","Go for a walk when I feel restless","Learn ten minutes of Torah before bed"];
+const TIKKUN = [16,32,41,42,59,77,90,105,137,150];
+
+const QUOTES = [
+  {he:"אֵיזֶהוּ גִבּוֹר? הַכּוֹבֵשׁ אֶת יִצְרוֹ", en:"Who is mighty? One who conquers his own inclination.", src:"Pirkei Avot 4:1", ref:"Pirkei_Avot.4.1", tags:["urge","climb","daily"]},
+  {he:"כִּי שֶׁבַע יִפּוֹל צַדִּיק וָקָם", en:"For the righteous one falls seven times, and rises.", src:"Mishlei 24:16", ref:"Proverbs.24.16", tags:["fall"]},
+  {he:"לֹא עָלֶיךָ הַמְּלָאכָה לִגְמֹר, וְלֹא אַתָּה בֶן חוֹרִין לִבָּטֵל מִמֶּנָּה", en:"It is not on you to finish the work, but you are not free to stop doing it.", src:"Pirkei Avot 2:16", ref:"Pirkei_Avot.2.16", tags:["climb","daily","fall"]},
+  {he:"בָּרָאתִי יֵצֶר הָרָע, בָּרָאתִי לוֹ תּוֹרָה תַּבְלִין", en:"I created the evil inclination, and I created Torah as its remedy.", src:"Kiddushin 30b", ref:"Kiddushin.30b", tags:["urge","daily"]},
+  {he:"אִם פָּגַע בְּךָ מְנֻוָּל זֶה, מָשְׁכֵהוּ לְבֵית הַמִּדְרָשׁ", en:"If this repulsive one meets you, drag him to the study hall.", src:"Kiddushin 30b", ref:"Kiddushin.30b", tags:["urge"]},
+  {he:"כׇּל הַגָּדוֹל מֵחֲבֵירוֹ, יִצְרוֹ גָּדוֹל הֵימֶנּוּ", en:"Whoever is greater than his fellow, his inclination is greater too.", src:"Sukkah 52a", ref:"Sukkah.52a", tags:["fall","urge"]},
+  {he:null, en:"At first the inclination is called a passer-by, then a guest, and in the end the master of the house.", src:"Sukkah 52b, after Shmuel II 12:4", ref:"Sukkah.52b", tags:["daily","urge"]},
+  {he:"לְעוֹלָם יַרְגִּיז אָדָם יֵצֶר טוֹב עַל יֵצֶר הָרָע", en:"A person should always stir up the good inclination against the evil one. If that does not work, learn Torah. If that does not work, say the Shema.", src:"Berachot 5a", ref:"Berakhot.5a", tags:["urge"]},
+  {he:"בִּמְקוֹם שֶׁבַּעֲלֵי תְשׁוּבָה עוֹמְדִין, צַדִּיקִים גְּמוּרִים אֵינָם עוֹמְדִין", en:"In the place where those who return stand, even the completely righteous cannot stand.", src:"Berachot 34b", ref:"Berakhot.34b", tags:["fall","climb"]},
+  {he:"זְדוֹנוֹת נַעֲשׂוֹת לוֹ כִּזְכֻיּוֹת", en:"Return from love, and even deliberate sins become like merits.", src:"Yoma 86b", ref:"Yoma.86b", tags:["fall"]},
+  {he:"הַבָּא לִטַּהֵר מְסַיְּעִין אוֹתוֹ", en:"One who comes to purify himself is helped from Above.", src:"Shabbat 104a", ref:"Shabbat.104a", tags:["climb","daily","urge"]},
+  {he:"מִצְוָה גּוֹרֶרֶת מִצְוָה, וַעֲבֵרָה גּוֹרֶרֶת עֲבֵרָה", en:"One mitzvah draws another after it, and one transgression draws another.", src:"Pirkei Avot 4:2", ref:"Pirkei_Avot.4.2", tags:["climb","daily"]},
+  {he:"אִם אֵין אֲנִי לִי, מִי לִי? וְאִם לֹא עַכְשָׁיו, אֵימָתָי?", en:"If I am not for myself, who will be for me? And if not now, when?", src:"Pirkei Avot 1:14", ref:"Pirkei_Avot.1.14", tags:["urge","daily"]},
+  {he:"לְפוּם צַעֲרָא אַגְרָא", en:"The reward matches the effort.", src:"Pirkei Avot 5:23", ref:"Pirkei_Avot.5.23", tags:["climb","urge"]},
+  {he:"אַל תַּאֲמִין בְּעַצְמְךָ עַד יוֹם מוֹתְךָ", en:"Do not trust yourself until the day you die.", src:"Pirkei Avot 2:4", ref:"Pirkei_Avot.2.4", tags:["climb"]},
+  {he:"לֹא דִבְּרָה תוֹרָה אֶלָּא כְּנֶגֶד יֵצֶר הָרָע", en:"The Torah spoke only with the evil inclination in view. It meets a person where they are.", src:"Kiddushin 21b", ref:"Kiddushin.21b", tags:["daily","fall"]},
+  {he:"לַפֶּתַח חַטָּאת רֹבֵץ, וְאֵלֶיךָ תְּשׁוּקָתוֹ, וְאַתָּה תִּמְשׇׁל בּוֹ", en:"Sin crouches at the door. Its desire is toward you, but you can master it.", src:"Bereshit 4:7", ref:"Genesis.4.7", tags:["urge"]},
+  {he:"וַיָּנׇס וַיֵּצֵא הַחוּצָה", en:"And he fled, and went outside. (Yosef, when tempted.) Leaving the room is a holy act.", src:"Bereshit 39:12", ref:"Genesis.39.12", tags:["urge"]},
+  {he:"וְלֹא תָתוּרוּ אַחֲרֵי לְבַבְכֶם וְאַחֲרֵי עֵינֵיכֶם", en:"Do not stray after your heart and after your eyes.", src:"Bamidbar 15:39", ref:"Numbers.15.39", tags:["urge","daily"]},
+  {he:"וּבָחַרְתָּ בַּחַיִּים", en:"Choose life.", src:"Devarim 30:19", ref:"Deuteronomy.30.19", tags:["urge","climb"]},
+  {he:"לֵב טָהוֹר בְּרָא לִי אֱלֹהִים, וְרוּחַ נָכוֹן חַדֵּשׁ בְּקִרְבִּי", en:"Create a pure heart in me, O God, and renew a steadfast spirit within me.", src:"Tehillim 51:12", ref:"Psalms.51.12", tags:["fall","daily"]},
+  {he:"שׁוּבוּ אֵלַי וְאָשׁוּבָה אֲלֵיכֶם", en:"Return to Me, and I will return to you.", src:"Malachi 3:7", ref:"Malachi.3.7", tags:["fall"]},
+  {he:"הֲשִׁיבֵנוּ ה׳ אֵלֶיךָ וְנָשׁוּבָה, חַדֵּשׁ יָמֵינוּ כְּקֶדֶם", en:"Bring us back to You, Hashem, and we shall return. Renew our days as of old.", src:"Eichah 5:21", ref:"Lamentations.5.21", tags:["fall"]},
+  {he:"וְהִנֵּה סֻלָּם מֻצָּב אַרְצָה וְרֹאשׁוֹ מַגִּיעַ הַשָּׁמָיְמָה", en:"And behold, a ladder set on the ground, and its top reached to heaven.", src:"Bereshit 28:12", ref:"Genesis.28.12", tags:["climb","daily"]},
+  {he:"וְצַדִּיק יְסוֹד עוֹלָם", en:"The righteous one is the foundation of the world.", src:"Mishlei 10:25", ref:"Proverbs.10.25", tags:["climb"]},
+  {he:"אִם אַתָּה מַאֲמִין שֶׁיְּכוֹלִין לְקַלְקֵל, תַּאֲמִין שֶׁיְּכוֹלִין לְתַקֵּן", en:"If you believe that you can damage, believe that you can repair.", src:"Likutei Moharan II:112", ref:"Likutei_Moharan,_Part_II.112", tags:["fall"]},
+  {he:"אֵין שׁוּם יֵאוּשׁ בָּעוֹלָם כְּלָל", en:"There is no despair in the world at all.", src:"Likutei Moharan II:78", ref:"Likutei_Moharan,_Part_II.78", tags:["fall"]},
+  {he:"כׇּל הָעוֹלָם כֻּלּוֹ גֶּשֶׁר צַר מְאֹד, וְהָעִקָּר לֹא לְהִתְפַּחֵד כְּלָל", en:"The whole world is a very narrow bridge, and the main thing is not to be afraid at all.", src:"Likutei Moharan II:48", ref:"Likutei_Moharan,_Part_II.48", tags:["urge","fall"]},
+  {he:null, en:"Teshuvah has three parts: regret for what was, confessing it in words, and resolving firmly for the future.", src:"Rambam, Hilchot Teshuvah 2:2 (summary)", ref:"Mishneh_Torah,_Repentance.2.2", tags:["fall"]},
+  {he:null, en:"Each time you push away a desire, even for a moment, you bring delight Above that is beyond measure. Do not be saddened that the struggle returns; it is your service.", src:"Tanya, ch. 27 (summary)", ref:"Tanya,_Part_I;_Likkutei_Amarim.27", tags:["urge","fall"]},
+  {he:null, en:"A person's first duty is to make clear to himself what his obligation is in his world, and where he should direct his aim in all his labour.", src:"Mesillat Yesharim, ch. 1 (summary)", ref:"Mesilat_Yesharim.1", tags:["daily","climb"]},
+  {he:null, en:"Open for Me an opening of teshuvah as small as the eye of a needle, and I will open for you openings that wagons can pass through.", src:"Shir HaShirim Rabbah 5:2 (summary)", ref:"Shir_HaShirim_Rabbah.5.2", tags:["fall","climb"]},
+  // Kedushah: women, intimacy and marriage
+  {he:"וַיִּבְרָא אֱלֹהִים אֶת הָאָדָם בְּצַלְמוֹ... זָכָר וּנְקֵבָה בָּרָא אֹתָם", en:"God created the human being in His image… male and female He created them.", src:"Bereshit 1:27", ref:"Genesis.1.27", tags:["marriage","daily"]},
+  {he:"לֹא טוֹב הֱיוֹת הָאָדָם לְבַדּוֹ, אֶעֱשֶׂה לּוֹ עֵזֶר כְּנֶגְדּוֹ", en:"It is not good for the man to be alone. I will make him a partner who stands opposite him.", src:"Bereshit 2:18", ref:"Genesis.2.18", tags:["marriage","urge"]},
+  {he:"וְדָבַק בְּאִשְׁתּוֹ וְהָיוּ לְבָשָׂר אֶחָד", en:"He shall cling to his wife, and they shall become one flesh.", src:"Bereshit 2:24", ref:"Genesis.2.24", tags:["marriage"]},
+  {he:"וְהָאָדָם יָדַע אֶת חַוָּה אִשְׁתּוֹ", en:"And Adam knew Chavah his wife. The Torah's word for intimacy is knowing: a meeting of whole persons, never a taking.", src:"Bereshit 4:1", ref:"Genesis.4.1", tags:["marriage"]},
+  {he:"וַתְּהִי לוֹ לְאִשָּׁה וַיֶּאֱהָבֶהָ", en:"She became his wife, and he loved her. Love grows inside the covenant.", src:"Bereshit 24:67", ref:"Genesis.24.67", tags:["marriage"]},
+  {he:"וַיִּהְיוּ בְעֵינָיו כְּיָמִים אֲחָדִים בְּאַהֲבָתוֹ אֹתָהּ", en:"Yaakov worked seven years for Rachel, and they seemed to him like a few days, because of his love for her.", src:"Bereshit 29:20", ref:"Genesis.29.20", tags:["marriage","climb"]},
+  {he:"אִישׁ וְאִשָּׁה, זָכוּ שְׁכִינָה בֵּינֵיהֶן", en:"A man and a woman: if they are worthy, the Shechinah dwells between them.", src:"Sotah 17a", ref:"Sotah.17a", tags:["marriage","daily"]},
+  {he:"הָאוֹהֵב אֶת אִשְׁתּוֹ כְּגוּפוֹ, וְהַמְכַבְּדָהּ יוֹתֵר מִגּוּפוֹ", en:"One who loves his wife as himself, and honours her more than himself…", src:"Yevamot 62b", ref:"Yevamot.62b", tags:["marriage"]},
+  {he:"כׇּל אָדָם שֶׁאֵין לוֹ אִשָּׁה שָׁרוּי בְּלֹא שִׂמְחָה, בְּלֹא בְּרָכָה, בְּלֹא טוֹבָה", en:"A man without a wife lives without joy, without blessing, without goodness.", src:"Yevamot 62b", ref:"Yevamot.62b", tags:["marriage"]},
+  {he:"לְעוֹלָם יְהֵא אָדָם זָהִיר בִּכְבוֹד אִשְׁתּוֹ, שֶׁאֵין בְּרָכָה מְצוּיָה בְּתוֹךְ בֵּיתוֹ אֶלָּא בִּשְׁבִיל אִשְׁתּוֹ", en:"A man must always be careful to honour his wife, for blessing is found in his home only because of her.", src:"Bava Metzia 59a", ref:"Bava_Metzia.59a", tags:["marriage","daily"]},
+  {he:"אַרְבָּעִים יוֹם קוֹדֶם יְצִירַת הַוָּלָד, בַּת קוֹל יוֹצֵאת וְאוֹמֶרֶת: בַּת פְּלוֹנִי לִפְלוֹנִי", en:"Forty days before a child is formed, a heavenly voice proclaims whom he will marry. Your match already exists.", src:"Sotah 2a", ref:"Sotah.2a", tags:["marriage","climb"]},
+  {he:"כׇּל אַהֲבָה שֶׁהִיא תְלוּיָה בְדָבָר, בָּטֵל דָּבָר, בְּטֵלָה אַהֲבָה", en:"Any love that depends on a thing ends when the thing is gone. Love that does not depend on a thing never ends.", src:"Pirkei Avot 5:16", ref:"Pirkei_Avot.5.16", tags:["marriage","urge"]},
+  {he:"מָצָא אִשָּׁה מָצָא טוֹב", en:"He who has found a wife has found goodness.", src:"Mishlei 18:22", ref:"Proverbs.18.22", tags:["marriage"]},
+  {he:"אֵשֶׁת חַיִל מִי יִמְצָא, וְרָחֹק מִפְּנִינִים מִכְרָהּ", en:"A woman of valour, who can find? Her worth is far beyond pearls.", src:"Mishlei 31:10", ref:"Proverbs.31.10", tags:["marriage","daily"]},
+  {he:"וּשְׂמַח מֵאֵשֶׁת נְעוּרֶךָ", en:"Rejoice in the wife of your youth.", src:"Mishlei 5:18", ref:"Proverbs.5.18", tags:["marriage","urge"]},
+  {he:"שִׂימֵנִי כַחוֹתָם עַל לִבֶּךָ… כִּי עַזָּה כַמָּוֶת אַהֲבָה", en:"Set me as a seal upon your heart… for love is as strong as death.", src:"Shir HaShirim 8:6", ref:"Song_of_Songs.8.6", tags:["marriage"]},
+  {he:"אֲנִי לְדוֹדִי וְדוֹדִי לִי", en:"I am my beloved's, and my beloved is mine.", src:"Shir HaShirim 6:3", ref:"Song_of_Songs.6.3", tags:["marriage"]},
+  {he:null, en:"Before a soul descends to this world it is male and female together. They are separated as they come down, and if a man is worthy, the Holy One joins them again in marriage.", src:"Zohar I:91b (summary)", ref:null, tags:["marriage"]}
+];
+
+/* ============ State ============ */
+const KEY = "sulam.v1";
+let state;
+function demoState(){
+  return {
+    demo:true, baseline:35, week:10, days:[{e:[{t:"SV",n:1}]},{e:[]},{e:[{t:"SV",n:1}]},{e:[{t:"SP",n:1}]}],
+    history:[
+      {w:6,spent:27,budget:30,out:"ascend",note:"Mornings were easy. Nights are the battle."},
+      {w:7,spent:31,budget:29,out:"repeat",note:"Three late nights in a row. Phone in bed every time."},
+      {w:7,spent:25,budget:29,out:"ascend",note:"Phone stays in the kitchen. Big difference."},
+      {w:8,spent:22,budget:28,out:"ascend",note:""},
+      {w:9,spent:19,budget:27,out:"ascend",note:"Did the urge timer twice. Both times it passed by minute six."}
+    ],
+    journal:[{type:"teshuvah",w:7,triggers:["Late night","Phone in bed","Lonely"],fence:"Phone charges outside the bedroom",note:"I felt alone after the argument and reached for the phone."}],
+    victories:9, cleanDays:14, overStreak:0, chaver:{name:"Dovid",phone:"+44 7700 900123"},
+    weekStart:addDays(realToday(),-4), devOffset:0, pinHash:null, stage:"single"
+  };
+}
+function freshState(baseline, week, stage="single"){
+  return {demo:false, baseline, week, stage, days:[], history:[], journal:[], victories:0, cleanDays:0, overStreak:0, chaver:{name:"",phone:""},
+    weekStart:realToday(), devOffset:0, pinHash:null};
+}
+function load(){
+  try{ const s=localStorage.getItem(KEY);
+    if(s){ const o=JSON.parse(s); if(!o.weekStart) o.weekStart=addDays(realToday(),-((o.days&&o.days.length)||0)); if(!o.stage) o.stage="single"; return o; }
+  }catch(e){}
+  return demoState();
+}
+/* Dates are plain YYYY-MM-DD strings in the viewer's local calendar; maths runs in UTC to dodge DST. */
+function isoOf(d){ return d.toISOString().slice(0,10); }
+function parseISO(s){ const [y,m,d]=s.split("-").map(Number); return Date.UTC(y,m-1,d); }
+function realToday(){ const n=new Date(); return isoOf(new Date(Date.UTC(n.getFullYear(),n.getMonth(),n.getDate()))); }
+function addDays(iso,n){ return isoOf(new Date(parseISO(iso)+n*864e5)); }
+function diffDays(a,b){ return Math.round((parseISO(b)-parseISO(a))/864e5); }
+function todayISO(){ return addDays(realToday(), state.devOffset||0); }
+function weekdayOf(iso){ return new Date(parseISO(iso)).getUTCDay(); }
+function prettyDate(iso){ return new Date(parseISO(iso)).toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"short",timeZone:"UTC"}); }
+const WD=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Shabbat"];
+const WD_SHORT=["Sun","Mon","Tue","Wed","Thu","Fri","Shab"];
+function todayIdx(){ return diffDays(state.weekStart, todayISO()); }
+function checkinTarget(){
+  const i=state.days.length, ti=todayIdx(), iso=addDays(state.weekStart,i);
+  return {i, iso, status: i<ti?"missed": i===ti?"today":"future"};
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+state = load();
+
+/* ============ Ladder maths ============ */
+const FINAL = 36; // week 36 = summit (budget 0)
+function phaseOf(w){ return Math.min(5, Math.ceil(w/7)); }
+function sefIdx(w){ return (w-1)%7; }
+function rawBudget(w){ return Math.max(0, FINAL - w); }
+function budget(w){ return Math.min(rawBudget(w), state.baseline ?? 35); }
+function maxWeight(w){ return w>=FINAL ? 0 : 6 - phaseOf(w); }
+function mixText(w){
+  if(w>=FINAL) return "0. Guard what you have built.";
+  if(budget(w)<rawBudget(w)) return `up to ${budget(w)} points (your baseline)`;
+  const [hi,lo] = PHASE_MIX[phaseOf(w)-1], j = sefIdx(w), parts=[];
+  if(7-j>0) parts.push(`${7-j}×${hi}`);
+  if(lo && j>0) parts.push(`${j}×${lo}`);
+  return parts.join(" + ");
+}
+function worstAllowed(w){
+  const m=maxWeight(w); if(!m) return "none";
+  return TIER_ORDER.filter(t=>TIERS[t].w===m).map(t=>TIERS[t].name).join(" or ");
+}
+function label(w){
+  if(w>=FINAL) return {en:"Shomer HaBrit", he:"שׁוֹמֵר הַבְּרִית", sef:null, world:null};
+  const s=SEFIROT[sefIdx(w)], wd=WORLDS[phaseOf(w)-1];
+  return {en:`${s.name} of ${wd.name}`, he:`${s.he.replace(/[֑-ׇ]/g,"")} ${wd.sheb}`, sef:s, world:wd};
+}
+function dayPts(d){ return d.e.reduce((a,x)=>a+TIERS[x.t].w*x.n,0); }
+function spent(){ return state.days.reduce((a,d)=>a+dayPts(d),0); }
+function capBreach(days,w){ const m=maxWeight(w); return days.some(d=>d.e.some(x=>TIERS[x.t].w>m)); }
+function worstOfDay(d){ let best=null; d.e.forEach(x=>{ if(!best||TIERS[x.t].w>TIERS[best].w) best=x.t; }); return best; }
+function placeWeek(times, tier){
+  const score = times*TIERS[tier].w;
+  if(times===0) return {week:FINAL, score:0};
+  const byPoints = FINAL - score, byTier = 7*(6-TIERS[tier].w);
+  return {week: Math.max(1, Math.min(byPoints, byTier)), score: Math.min(score,35)};
+}
+
+/* ============ Helpers ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function pick(tag, seed){ const list=QUOTES.filter(q=>q.tags.includes(tag)); const i = seed==null ? Math.floor(Math.random()*list.length) : seed % list.length; return list[i]; }
+function quoteHTML(q, cls=""){
+  return `<figure class="card quote ${cls}" style="margin:0">
+    ${q.he?`<span class="he" lang="he">${q.he}</span>`:""}
+    <p>${esc(q.en)}</p>
+    <figcaption class="src"><span>${esc(q.src)}</span>${q.ref?`<a href="https://www.sefaria.org/${q.ref}" target="_blank" rel="noopener">Read on Sefaria ↗</a>`:""}</figcaption>
+  </figure>`;
+}
+function tierColor(t){ return `var(--t-${t})`; }
+function lift(w){ return Math.max(0,Math.min(1,(w-1)/35)); }
+function applyWorld(){
+  const w=state.week, p=w>=FINAL?6:phaseOf(w), r=document.documentElement.style;
+  r.setProperty("--world", WORLD_COLORS[p-1]); r.setProperty("--lift", lift(w).toFixed(3));
+}
+/* The ladder of light: 35 rungs narrowing in perspective toward a glow in the current world's colour. */
+function ladderSVG(w){
+  const W=112,H=236,top=20,bot=232,cx=56,bh=42,th=10, L=lift(w);
+  const yAt=t=>bot-(bot-top)*(1-Math.pow(1-t,1.55));
+  const half=y=>th+(bh-th)*((y-top)/(bot-top));
+  let rungs="";
+  for(let i=1;i<=35;i++){
+    const y=+yAt(i/36).toFixed(2), h=half(y);
+    const stroke=i<w?"#E2BC6E":i===w?"#FFF6DC":"rgba(255,255,255,.15)", sw=i===w?2.6:i<w?1.5:1;
+    rungs+=`<line x1="${(cx-h).toFixed(2)}" y1="${y}" x2="${(cx+h).toFixed(2)}" y2="${y}" stroke="${stroke}" stroke-width="${sw}" stroke-linecap="round"${i===w?' filter="url(#lg-glow)" class="rung-glow"':""}/>`;
+  }
+  return `<svg class="hero-ladder" viewBox="0 0 ${W} ${H}" role="img" aria-label="Rung ${Math.min(w,35)} of 35 on the ladder">
+    <defs>
+      <radialGradient id="lg-sun"><stop offset="0" stop-color="#FFF8E6" stop-opacity=".95"/><stop offset=".3" style="stop-color:var(--world);stop-opacity:.55"/><stop offset="1" style="stop-color:var(--world);stop-opacity:0"/></radialGradient>
+      <linearGradient id="lg-rail" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#A57A2E"/><stop offset=".7" stop-color="#E2BC6E"/><stop offset="1" stop-color="#FFF6DC" stop-opacity=".25"/></linearGradient>
+      <filter id="lg-glow" filterUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <circle cx="${cx}" cy="${top-4}" r="${(30+26*L).toFixed(1)}" fill="url(#lg-sun)"/>
+    <line x1="${cx-bh}" y1="${bot}" x2="${cx-th}" y2="${top}" stroke="url(#lg-rail)" stroke-width="1.6"/>
+    <line x1="${cx+bh}" y1="${bot}" x2="${cx+th}" y2="${top}" stroke="url(#lg-rail)" stroke-width="1.6"/>
+    ${rungs}</svg>`;
+}
+/* A moment of light: used when a rung is climbed or an urge is conquered. */
+function moment({eyebrow,title,he,sub,btn="Continue"},after){
+  const sparks=Array.from({length:24},()=>`<i class="spark" style="left:${(Math.random()*100).toFixed(1)}%;animation-duration:${(3+Math.random()*4).toFixed(2)}s;animation-delay:${(.6+Math.random()*1.8).toFixed(2)}s"></i>`).join("");
+  const el=document.createElement("div"); el.className="moment"; el.setAttribute("role","dialog"); el.setAttribute("aria-modal","true"); el.setAttribute("aria-label",title);
+  el.innerHTML=`<div class="beam"></div><div class="burst"></div>${sparks}<div class="msg">${eyebrow?`<div class="eyebrow" style="color:var(--gold)">${esc(eyebrow)}</div>`:""}<h2>${esc(title)}</h2>${he?`<div class="he" lang="he">${he}</div>`:""}${sub?`<p>${esc(sub)}</p>`:""}<button class="btn primary" style="margin-top:12px;min-width:180px">${esc(btn)}</button></div>`;
+  document.body.appendChild(el);
+  const b=el.querySelector("button");
+  b.onclick=()=>{ el.remove(); after&&after(); };
+  setTimeout(()=>b.focus({preventScroll:true}),900);
+}
+function ascendMoment(w){
+  const n=w+1, N=label(n);
+  if(w>=FINAL) return moment({eyebrow:"Shomer HaBrit",title:"Another week guarded",he:"וְצַדִּיק יְסוֹד עוֹלָם",sub:"The righteous one is the foundation of the world (Mishlei 10:25)."});
+  if(n>=FINAL) return moment({eyebrow:"The summit",title:"Shomer HaBrit",he:"שׁוֹמֵר הַבְּרִית",sub:"You have climbed all five worlds. Like Yosef, you are now a guardian of the covenant."});
+  if(phaseOf(n)!==phaseOf(w)) return moment({eyebrow:"A new world",title:`You enter ${N.world.name}`,he:N.world.he,sub:`${N.world.en}. ${N.world.desc}`});
+  moment({eyebrow:`Week ${n}`,title:`You ascend to ${N.sef.name}`,he:N.he,sub:`${N.sef.theme}. Your ceiling is now ${budget(n)} points.`});
+}
+
+/* ============ Views ============ */
+let tab = "today";
+function render(){
+  applyWorld();
+  document.querySelectorAll(".tab[data-tab]").forEach(b=>{ if(b.dataset.tab!=="sos") b.setAttribute("aria-current", b.dataset.tab===tab?"page":"false"); });
+  const app=$("#app");
+  const banner = state.demo ? `<div class="banner"><span><b>Example journey.</b> These numbers are sample data, so you can see how it works.</span><button class="btn gold" id="startOwn">Start my own</button></div>` : "";
+  const head = `<header class="top"><div class="brand">Sulam<span class="he" lang="he">סֻלָּם</span></div><span class="pill num">Week ${Math.min(state.week,FINAL)}${state.week>=FINAL?"+":""} of 35</span></header>`;
+  app.innerHTML = `<div class="stack">${banner}${head}${({today,ladder,wisdom,journal})[tab]()}</div>`;
+  const so=$("#startOwn"); if(so) so.onclick=openOnboarding;
+  bind[tab] && bind[tab]();
+  window.scrollTo(0,0);
+}
+
+function today(){
+  const w=state.week, L=label(w), B=budget(w), S=spent(), left=B-S, over=S>B, breach=capBreach(state.days,w);
+  const segs = state.days.flatMap(d=>d.e.map(x=>({t:x.t,p:TIERS[x.t].w*x.n})));
+  const denom = Math.max(B,S,1);
+  const ti=todayIdx(), tg=checkinTarget();
+  const dots = Array.from({length:7},(_,i)=>{
+    const iso=addDays(state.weekStart,i), nm=WD_SHORT[weekdayOf(iso)];
+    if(i<state.days.length){ const d=state.days[i], wt=worstOfDay(d);
+      return wt ? `<div class="day"><span class="dot slip" style="background:${tierColor(wt)}" title="${TIERS[wt].name}">${wt}</span>${nm}</div>`
+                : `<div class="day"><span class="dot clean" title="Clean">✓</span>${nm}</div>`; }
+    if(i===ti) return `<div class="day"><span class="dot today"></span><b style="color:var(--accent)">Today</b></div>`;
+    if(i<ti) return `<div class="day"><span class="dot missed" title="Not checked in"></span>${nm}</div>`;
+    return `<div class="day"><span class="dot"></span>${nm}</div>`;
+  }).join("");
+  const checkBtn = state.days.length>=7 ? `<button class="btn primary block" id="review">Review the week</button>`
+    : tg.status==="missed" ? `<button class="btn primary block" id="checkin">Check in for ${WD[weekdayOf(tg.iso)]} (missed)</button>`
+    : tg.status==="today" ? `<button class="btn primary block" id="checkin">Check in for today</button>`
+    : ti<0 ? `<button class="btn primary block" disabled>Your new week starts ${prettyDate(tg.iso)}</button>`
+    : `<button class="btn primary block" disabled>Checked in. See you tomorrow</button>`;
+  const sefCard = L.sef ? `<section class="card sefirah"><div class="glyph he" lang="he">${L.sef.g}</div><div>
+      <div class="eyebrow">Middah of the week</div><h3>${L.sef.name}: ${L.sef.theme}</h3>
+      <p style="margin:6px 0 0">${esc(L.sef.practice)}</p></div></section>`
+    : `<section class="card sefirah"><div class="glyph he" lang="he">י</div><div><div class="eyebrow">The summit</div><h3>Shomer HaBrit</h3><p style="margin:6px 0 0">You have climbed all five worlds. Now you guard what you built, one clean week at a time, like Yosef HaTzaddik.</p></div></section>`;
+  const q = pick("daily", w*7+state.days.length);
+  return `
+  <section class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">${L.world? esc(L.world.en) : "Beyond the ladder"}</div>
+      <h1>${esc(L.en)}</h1><span class="he" lang="he">${L.he}</span>
+      <p class="thesis">Conquer this inclination, and no other can rule you.</p>
+    </div>
+    ${ladderSVG(w)}
+  </section>
+  <section class="card">
+    <div class="budget-head">
+      <div><div class="eyebrow">This week's ceiling</div>
+        <div class="big num" style="color:${over?"var(--danger)":"var(--ink)"}">${over?`${S-B} over`:`${left}`}<span class="unit"> ${over?"points":"of "+B+" points left"}</span></div></div>
+      ${breach?`<span class="pill bad">Above this world's limit</span>`:over?`<span class="pill bad">Over ceiling</span>`:`<span class="pill ok">Within ceiling</span>`}
+    </div>
+    <div class="bar ${over?"over":""}" role="img" aria-label="${S} of ${B} points used">${segs.map(s=>`<span style="width:${s.p/denom*100}%;background:${tierColor(s.t)}"></span>`).join("")}</div>
+    <div class="days">${dots}</div>
+    <div class="ceiling"><span>Path: <b>${mixText(w)}</b></span><span>Worst allowed: <b>${worstAllowed(w)}</b></span></div>
+    <p class="note" style="margin:12px 0 0">A ceiling, not a target. Every day under it is a day of gevurah.</p>
+  </section>
+  ${checkBtn}
+  ${sefCard}
+  ${kedushahCard(w)}
+  ${quoteHTML(q,"feature")}
+  <section class="stats">
+    <div class="stat"><b class="num">${state.victories}</b><span>Urges conquered</span></div>
+    <div class="stat"><b class="num">${state.cleanDays}</b><span>Clean days</span></div>
+    <div class="stat"><b class="num">${state.history.filter(h=>h.out==="ascend").length}</b><span>Rungs ascended</span></div>
+  </section>
+  <button class="btn block" id="tikkun">Say Tikkun HaKlali</button>`;
+}
+
+function kedushahCard(w){
+  const p = w>=FINAL ? 5 : phaseOf(w), k=KEDUSHAH[p-1], cov=covenant(w);
+  const purpose = track()==="married" ? "Elevating your marriage" : "Preparing for marriage";
+  return `<section class="card kedushah">
+    <div class="eyebrow">Kedushah · ${purpose}</div>
+    <h3>${esc(k.title)}</h3>
+    <p style="margin:6px 0 0">${esc(k.teach)}</p>
+    <div class="covenant"><div class="eyebrow">Your covenant · ${cov.length} of 5</div>
+      ${cov.map((c,i)=>`<div class="cov ${i===cov.length-1 && w<FINAL?"new":""}"><span class="seal num">${i+1}</span><span>${esc(c)}${i===cov.length-1 && w<FINAL?` <em>New in ${WORLDS[p-1].name}</em>`:""}</span></div>`).join("")}
+    </div></section>`;
+}
+function ladder(){
+  const w=state.week; let html=`<section><div class="eyebrow">Your ascent</div><h1 style="font-size:28px">Five worlds, thirty-five rungs</h1>
+  <p class="thesis" style="margin:8px 0 0">Who is mighty? One who conquers his inclination. Master this battle, and every other becomes yours.</p>
+  <p class="muted" style="margin:10px 0 0">Each week the ceiling drops by one point. Each world takes seven weeks, one for each middah from Chesed to Malchut, like the counting of the Omer. Each world also adds one commitment to your covenant, toward ${track()==="married"?"a deeper marriage":"the marriage you are preparing for"}.</p></section>`;
+  html += `<div class="summit ${w>=FINAL?"reached":""}"><div class="he" lang="he" style="font-size:22px;color:var(--gold)">שׁוֹמֵר הַבְּרִית</div><b>Shomer HaBrit</b><div class="muted" style="font-size:13px">Week 36 and beyond: a ceiling of zero, guarded.</div></div>`;
+  for(let p=5;p>=1;p--){
+    const wd=WORLDS[p-1];
+    let rungs="";
+    for(let k=6;k>=0;k--){
+      const wk=(p-1)*7+k+1, s=SEFIROT[k], cls = wk<w?"done":wk===w?"here":"";
+      rungs += `<div class="rung ${cls}"><span class="wk">Wk ${wk}</span><span class="name">${s.name}${wk===w?" · you are here":""}</span><span class="mix num">${budget(wk)} pts</span></div>`;
+    }
+    const k=KEDUSHAH[p-1], cur = w<FINAL && phaseOf(w)===p;
+    html += `<section class="world ${cur?"current":""}" style="--wc:${WORLD_COLORS[p-1]}"><div class="world-head"><div><div class="eyebrow">World ${p} · ${esc(wd.en)}</div><h3>${wd.name}</h3></div><span class="he" lang="he">${wd.he}</span></div>
+      <p class="world-desc">${esc(wd.desc)}</p>
+      <p class="world-desc"><b style="color:var(--ink)">Kedushah: ${esc(k.title)}.</b> Covenant: ${esc(k.commit[track()])}</p>
+      <div class="rungs">${rungs}</div></section>`;
+  }
+  html += `<p class="foot">The five worlds are used here as a map for the journey, inspired by Kabbalah rather than a teaching of it.</p>`;
+  return html;
+}
+
+let wisdomTag="all";
+function wisdom(){
+  const tags=[["all","All"],["marriage","Women and marriage"],["urge","In the urge"],["fall","After a fall"],["climb","Climbing"],["daily","Daily"]];
+  const list = QUOTES.filter(q=>wisdomTag==="all"||q.tags.includes(wisdomTag));
+  return `<section><div class="eyebrow">From the sages</div><h1 style="font-size:28px">Wisdom</h1></section>
+  <div class="filters" role="group" aria-label="Filter quotes">${tags.map(([k,v])=>`<button data-tag="${k}" aria-pressed="${k===wisdomTag}">${v}</button>`).join("")}</div>
+  ${list.map(q=>quoteHTML(q)).join("")}
+  <p class="foot">The English is our own rendering. Lines marked "summary" are paraphrases. Check every source on Sefaria before you rely on it.</p>`;
+}
+
+function journal(){
+  const hist=[...state.history].reverse();
+  const counts={}; state.journal.forEach(j=>(j.triggers||[]).forEach(t=>counts[t]=(counts[t]||0)+1));
+  const trig=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  return `<section><div class="eyebrow">Cheshbon hanefesh</div><h1 style="font-size:28px">Journal</h1></section>
+  <section class="card"><h3 style="font-size:18px;margin-bottom:6px">Weeks</h3>
+    ${hist.length?`<div class="hist">${hist.map(h=>`<div class="hrow"><span><b>Week ${h.w}</b> <span class="muted">· ${esc(label(h.w).en)}</span><br><span class="muted num" style="font-size:12.5px">${h.spent} of ${h.budget} pts</span></span>
+      <span class="pill ${h.out==="ascend"?"ok":h.out==="repeat"?"bad":"back"}">${h.out==="ascend"?"Climbed":h.out==="repeat"?"Repeated":"Stepped back"}</span>
+      <div class="hbar ${h.spent>h.budget?"over":""}"><span style="width:${Math.min(100,h.spent/Math.max(h.budget,1)*100)}%"></span></div>
+      ${h.brit?`<span style="grid-column:1/-1;font-size:12.5px" class="muted">Covenant kept: <b class="num" style="color:${h.brit.kept===h.brit.total?"var(--gold)":"var(--danger)"}">${h.brit.kept} of ${h.brit.total}</b></span>`:""}
+      ${h.note?`<span style="grid-column:1/-1;font-size:13.5px" class="muted">“${esc(h.note)}”</span>`:""}</div>`).join("")}</div>`:`<p class="muted">Your first week review will show up here after day 7.</p>`}
+  </section>
+  <section class="card"><h3 style="font-size:18px;margin-bottom:6px">What leads to a fall</h3>
+    ${trig.length?trig.map(([t,n])=>`<div class="trig"><span>${esc(t)}</span><b class="num">${n}</b></div>`).join(""):`<p class="muted">After a fall, the teshuvah flow asks what led there. Patterns build up here.</p>`}
+    ${state.journal.filter(j=>j.fence).slice(-3).reverse().map(j=>`<p class="note" style="margin:10px 0 0">Fence: ${esc(j.fence)}</p>`).join("")}
+  </section>
+  <section class="card stack"><h3 style="font-size:22px">Where you are in life</h3>
+    <p class="muted" style="margin:0">This shapes your covenant and the kedushah teachings.</p>
+    <div class="choices" id="stagePick">${Object.entries(STAGES).map(([k,v])=>`<button data-s="${k}" aria-pressed="${state.stage===k}">${v}</button>`).join("")}</div>
+  </section>
+  <section class="card stack"><h3 style="font-size:18px">Your chaver</h3>
+    <p class="muted" style="margin:0">One person you trust, who you can message when an urge starts. Their details show on the urge screen.</p>
+    <div><label for="cname">Name</label><input id="cname" type="text" value="${esc(state.chaver.name)}" autocomplete="off"></div>
+    <div><label for="cphone">Phone</label><input id="cphone" type="tel" value="${esc(state.chaver.phone)}" autocomplete="off"></div>
+    <button class="btn" id="savechaver">Save chaver</button>
+  </section>
+  <section class="card stack"><h3 style="font-size:18px">App lock</h3>
+    ${state.pinHash?`<p class="muted" style="margin:0">Sulam asks for your PIN when it opens, and again after a minute in the background.</p>
+      <div class="row"><button class="btn" id="locknow">Lock now</button><button class="btn" id="chpin">Change PIN</button><button class="btn" id="offpin">Turn off PIN</button></div>`
+    :`<p class="muted" style="margin:0">Add a 4-digit PIN so nobody who picks up your phone can open Sulam.</p><button class="btn" id="setpin">Set a PIN</button>`}
+  </section>
+  <section class="card stack"><h3 style="font-size:18px">Privacy and guidance</h3>
+    <p style="margin:0">Everything stays on this device. Sulam has no account, no server and no analytics.</p>
+    <p class="muted" style="margin:0">Sulam supports teshuvah and recovery. It does not replace a rav or a therapist. If you feel out of control or in crisis, reach out to a professional who works with compulsive sexual behaviour.</p>
+  </section>
+  <section class="card stack"><h3 style="font-size:18px">Prototype tools</h3>
+    <p class="muted" style="margin:0">Test clock: <b>${prettyDate(todayISO())}</b>${state.devOffset?` (${state.devOffset} day${state.devOffset===1?"":"s"} ahead)`:""}</p>
+    <div class="row"><button class="btn" id="nextday">Move the clock forward a day</button><button class="btn" id="fillclean">Fill the rest of this week as clean</button><button class="btn" id="restart">Start over</button></div>
+    <div id="restartConfirm" hidden class="stack"><p style="margin:0">This erases your journey on this device. It can't be undone.</p><div class="row"><button class="btn" id="restartYes" style="color:var(--danger);border-color:var(--danger)">Erase and start over</button><button class="btn ghost" id="restartNo">Keep my journey</button></div></div>
+  </section>`;
+}
+
+const bind = {
+  today(){ const c=$("#checkin"); if(c) c.onclick=openCheckin; const r=$("#review"); if(r) r.onclick=openWeekReview; $("#tikkun").onclick=()=>openTikkun(); },
+  wisdom(){ document.querySelectorAll("[data-tag]").forEach(b=>b.onclick=()=>{wisdomTag=b.dataset.tag; render();}); },
+  journal(){
+    $("#savechaver").onclick=()=>{ state.chaver={name:$("#cname").value.trim(),phone:$("#cphone").value.trim()}; save(); $("#savechaver").textContent="Saved"; };
+    document.querySelectorAll("#stagePick button").forEach(b=>b.onclick=()=>{ state.stage=b.dataset.s; save(); render(); });
+    $("#nextday").onclick=()=>{ state.devOffset=(state.devOffset||0)+1; save(); render(); };
+    $("#fillclean").onclick=()=>{ while(state.days.length<7){ state.days.push({e:[]}); state.cleanDays++; }
+      const need=diffDays(todayISO(), addDays(state.weekStart,6)); if(need>0) state.devOffset=(state.devOffset||0)+need;
+      save(); tab="today"; render(); openWeekReview(); };
+    const sp=$("#setpin"); if(sp) sp.onclick=openSetPin;
+    const cp=$("#chpin"); if(cp) cp.onclick=openSetPin;
+    const op=$("#offpin"); if(op) op.onclick=()=>{ state.pinHash=null; save(); render(); };
+    const ln=$("#locknow"); if(ln) ln.onclick=showLock;
+    $("#restart").onclick=()=>{ $("#restartConfirm").hidden=false; };
+    $("#restartNo").onclick=()=>{ $("#restartConfirm").hidden=true; };
+    $("#restartYes").onclick=()=>{ try{localStorage.removeItem(KEY);}catch(e){} state=demoState(); tab="today"; render(); openOnboarding(); };
+  }
+};
+
+/* ============ Sheets ============ */
+function openSheet(title, inner, mount, opts={}){
+  $("#layer").innerHTML = `<div class="scrim" id="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+    <div class="sheet-head"><h2>${esc(title)}</h2>${opts.noClose?"":`<button class="x" id="xclose" aria-label="Close">×</button>`}</div>
+    <div id="sheetBody">${inner}</div></div></div>`;
+  const x=$("#xclose"); if(x) x.onclick=()=>closeSheet(opts.onClose);
+  mount && mount();
+}
+function closeSheet(after){ $("#layer").innerHTML=""; after && after(); }
+function setBody(html, mount){ $("#sheetBody").innerHTML=html; $(".sheet").scrollTop=0; mount&&mount(); }
+
+/* Onboarding */
+function openOnboarding(){
+  const ob={times:7,tier:"BG",stage:"single"};
+  const s1=()=>setBody(`<div class="steps"><i class="on"></i><i></i><i></i></div><div class="stack">
+    <p class="thesis" style="margin:0;font-size:20px;color:var(--ink)">Who is mighty? One who conquers his inclination.</p>
+    <p style="margin:0;font-size:16px">Sulam is a ladder out of pornography, one rung a week, guided by the sages. This is the battle that trains every other. It is also preparation for something greater: honouring women as created in God's image, and a marriage where two souls become one.</p>
+    <p style="margin:0">Each week has a <b>ceiling</b> of points. Boy-girl content costs 5, solo video 4, solo picture or clothed video 3, clothed picture 2 and imagination 1. The ceiling drops by one point every week until it reaches zero.</p>
+    <p class="note" style="margin:0">The ceiling is a limit, never a permission. The Torah speaks to a person where they are (Kiddushin 21b), and the Rambam teaches that character is changed step by step. Speak with your rav about this approach, and with a therapist if you can.</p>
+    <p class="muted" style="margin:0">Everything you enter stays on this device.</p>
+    <button class="btn primary block" id="n1">Find my starting rung</button></div>`,()=>$("#n1").onclick=s2);
+  const s2=()=>setBody(`<div class="steps"><i class="on"></i><i class="on"></i><i></i></div><div class="stack">
+    <p style="margin:0;font-size:16px">Be honest. Over the last seven days, how many times did you fall?</p>
+    <div class="row" style="justify-content:center"><div class="stepper"><button id="tm" aria-label="Fewer">−</button><b class="num big" id="tv" style="font-size:44px;min-width:60px">${ob.times}</b><button id="tp" aria-label="More">+</button></div></div>
+    <p style="margin:0">What did you usually watch?</p>
+    <div class="choices" id="tch">${TIER_ORDER.map(t=>`<button data-t="${t}" aria-pressed="${t===ob.tier}">${TIERS[t].name}</button>`).join("")}</div>
+    <p style="margin:0">Where are you in life?</p>
+    <div class="choices" id="sch">${Object.entries(STAGES).map(([k,v])=>`<button data-s="${k}" aria-pressed="${k===ob.stage}">${v}</button>`).join("")}</div>
+    <button class="btn primary block" id="n2">Place me on the ladder</button></div>`,()=>{
+      document.querySelectorAll("#sch button").forEach(b=>b.onclick=()=>{ob.stage=b.dataset.s;document.querySelectorAll("#sch button").forEach(x=>x.setAttribute("aria-pressed",x===b));});
+      const upd=()=>{$("#tv").textContent=ob.times;};
+      $("#tm").onclick=()=>{ob.times=Math.max(0,ob.times-1);upd();};
+      $("#tp").onclick=()=>{ob.times=Math.min(21,ob.times+1);upd();};
+      document.querySelectorAll("#tch button").forEach(b=>b.onclick=()=>{ob.tier=b.dataset.t;document.querySelectorAll("#tch button").forEach(x=>x.setAttribute("aria-pressed",x===b));});
+      $("#n2").onclick=s3;
+    });
+  const s3=()=>{
+    const pl=placeWeek(ob.times,ob.tier), L=label(pl.week), baseline=Math.max(pl.score,0);
+    const tmp=state; state={...freshState(baseline,pl.week)}; const B=budget(pl.week), mix=mixText(pl.week), worst=worstAllowed(pl.week); state=tmp;
+    setBody(`<div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i></div><div class="stack">
+      <div class="eyebrow">Your starting rung</div>
+      <h2 style="font-size:28px">Week ${Math.min(pl.week,FINAL)}: ${esc(L.en)}</h2><span class="he" lang="he" style="font-size:19px;color:var(--muted)">${L.he}</span>
+      <div class="card"><p style="margin:0">Your baseline: <b class="num">${ob.times}×${ob.tier} = ${ob.times*TIERS[ob.tier].w} points</b>.</p>
+      <p style="margin:6px 0 0">First ceiling: <b class="num">${B} points</b>. Worst allowed: <b>${worst}</b>.</p>
+      ${pl.week<FINAL?`<p style="margin:6px 0 0" class="muted">Path: ${mix}. Your ceiling will never be higher than your baseline.</p>`:""}
+      ${ob.times*TIERS[ob.tier].w>35?`<p style="margin:6px 0 0" class="muted">Your baseline is above the top of the ladder, so you start on the first rung. The first weeks will be the hardest. Lean on your chaver.</p>`:""}</div>
+      ${quoteHTML(QUOTES.find(q=>q.ref==="Genesis.28.12"))}
+      <button class="btn primary block" id="begin">Begin the climb</button></div>`,()=>{
+        $("#begin").onclick=()=>{ state=freshState(baseline,pl.week,ob.stage); save(); closeSheet(); tab="today"; render(); };
+      });
+  };
+  openSheet("Welcome", "", s1);
+}
+
+/* Check-in */
+function openCheckin(){
+  const w=state.week, counts={}; TIER_ORDER.forEach(t=>counts[t]=0);
+  const B=budget(w), S=spent();
+  const view=()=>{
+    const pts=TIER_ORDER.reduce((a,t)=>a+counts[t]*TIERS[t].w,0);
+    const tg=checkinTarget();
+    return `<div class="stack"><p style="margin:0"><b>${prettyDate(tg.iso)}</b>${tg.status==="missed"?" (missed)":""}, week ${w}. ${B-S>=0?`<span class="num">${B-S}</span> points left this week.`:"You are over this week's ceiling."}</p>
+    <button class="btn gold block" id="clean">A clean day</button>
+    <div class="eyebrow" style="margin-top:4px">Or log what happened</div>
+    <div class="tierlist">${TIER_ORDER.map(t=>`<div class="tierrow"><i style="background:${tierColor(t)}"></i><div><b>${TIERS[t].name}</b>
+      <small class="${TIERS[t].w>maxWeight(w)?"warn":""}">${TIERS[t].w} pts${TIERS[t].w>maxWeight(w)?" · above this world's limit":""}</small></div>
+      <div class="stepper"><button data-m="${t}" aria-label="Less ${TIERS[t].name}">−</button><b class="num">${counts[t]}</b><button data-p="${t}" aria-label="More ${TIERS[t].name}">+</button></div></div>`).join("")}</div>
+    <button class="btn primary block" id="logit" ${pts?"":"disabled"}>Log ${pts} point${pts===1?"":"s"}</button></div>`;
+  };
+  const mount=()=>{
+    document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{counts[b.dataset.m]=Math.max(0,counts[b.dataset.m]-1);setBody(view(),mount);});
+    document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{counts[b.dataset.p]++;setBody(view(),mount);});
+    $("#clean").onclick=()=>submitDay([]);
+    $("#logit").onclick=()=>submitDay(TIER_ORDER.filter(t=>counts[t]).map(t=>({t,n:counts[t]})));
+  };
+  openSheet("Daily check-in", view(), mount);
+}
+function submitDay(entries){
+  const w=state.week, before=spent();
+  state.days.push({e:entries});
+  if(!entries.length) state.cleanDays++;
+  save(); render();
+  const after=spent(), B=budget(w), breach=entries.some(x=>TIERS[x.t].w>maxWeight(w));
+  if(entries.length && (after>B || breach)) return openTeshuvah(after>B && before<=B ? "over" : breach ? "breach" : "over");
+  const q = entries.length ? pick("daily") : pick("climb");
+  setBody(`<div class="stack">
+    <h2 style="font-size:24px">${entries.length?"Logged. Still within the ceiling.":"A clean day. Well done."}</h2>
+    <p style="margin:0" class="muted">${entries.length?`You have ${B-after} points left this week. The ceiling is a limit, not a target, so every point you leave unused counts.`:"One more step up the ladder."}</p>
+    ${quoteHTML(q)}<button class="btn primary block" id="ok">Continue</button></div>`,()=>$("#ok").onclick=()=>closeSheet(afterDay));
+}
+function afterDay(){ if(state.days.length>=7) openWeekReview(); }
+
+/* Teshuvah */
+function openTeshuvah(kind, after=afterDay, broken=[], w0=state.week){
+  const opening = kind==="covenant"
+    ? `You did not keep your covenant this week: <b>${broken.map(esc).join(" ")}</b> Stop for a moment. The covenant is not broken forever. It is renewed by returning.`
+    : `${kind==="breach"?"That was above this world's limit.":"You've gone over this week's ceiling."} Stop for a moment. This is not the end of the climb.`;
+  const rise = kind==="covenant"
+    ? "Your climb continues. Each day you return, the covenant is renewed, and every return makes it stronger."
+    : "Your rung stays where it is. If this week ends over the ceiling, you simply repeat it.";
+  const t={triggers:[],fence:"",note:""}; let step=0;
+  const steps=[
+    ()=>`<div class="stack"><p style="margin:0;font-size:16px">${opening}</p>
+      ${quoteHTML(pick("fall",0+Math.floor(Math.random()*3)))}
+      <p class="muted" style="margin:0">The Rambam teaches teshuvah in three steps: regret, confession and resolve. Take them now, gently.</p></div>`,
+    ()=>`<div class="stack"><div class="eyebrow">Charatah · Regret</div><p style="margin:0">What led here? Choose everything that was true.</p>
+      <div class="choices" id="trg">${TRIGGERS.map(x=>`<button data-x="${esc(x)}" aria-pressed="${t.triggers.includes(x)}">${esc(x)}</button>`).join("")}</div></div>`,
+    ()=>`<div class="stack"><div class="eyebrow">Vidui · Confession</div><p style="margin:0">Say it plainly, in your own words, aloud if you can. Write it here only for yourself.</p>
+      <div><label for="vnote">What happened, and how do you feel?</label><textarea id="vnote">${esc(t.note)}</textarea></div>
+      <p class="he" lang="he" style="font-size:19px;margin:0">אָנָּא ה׳, חָטָאתִי, עָוִיתִי, פָּשַׁעְתִּי לְפָנֶיךָ</p>
+      <p class="muted" style="margin:0;font-size:13px">“Please, Hashem, I have sinned, I have done wrong, I have transgressed before You.” (Yoma 36b, adapted)</p></div>`,
+    ()=>`<div class="stack"><div class="eyebrow">Kabbalah l'atid · Resolve</div><p style="margin:0">Choose one concrete fence for the coming days. Small and real beats big and vague.</p>
+      <div class="choices" id="fnc">${FENCES.map(x=>`<button data-x="${esc(x)}" aria-pressed="${t.fence===x}">${esc(x)}</button>`).join("")}</div>
+      <div><label for="fown">Or write your own</label><input id="fown" type="text" value="${FENCES.includes(t.fence)?"":esc(t.fence)}"></div></div>`,
+    ()=>`<div class="stack"><div class="eyebrow">Rise</div><h2 style="font-size:24px">You have not lost your place.</h2>
+      <p style="margin:0">${rise}</p>
+      ${quoteHTML(QUOTES.find(q=>q.ref==="Berakhot.34b"))}
+      <button class="btn block" id="tk">Say Tikkun HaKlali</button></div>`
+  ];
+  const draw=()=>{
+    const last=step===steps.length-1;
+    setBody(`<div class="steps">${steps.map((_,i)=>`<i class="${i<=step?"on":""}"></i>`).join("")}</div>${steps[step]()}
+      <div class="row" style="margin-top:16px;justify-content:space-between">${step?`<button class="btn ghost" id="bk">Back</button>`:"<span></span>"}<button class="btn primary" id="nx">${last?"Save and continue":"Next"}</button></div>`,()=>{
+      document.querySelectorAll("#trg button").forEach(b=>b.onclick=()=>{const x=b.dataset.x;t.triggers=t.triggers.includes(x)?t.triggers.filter(y=>y!==x):[...t.triggers,x];b.setAttribute("aria-pressed",t.triggers.includes(x));});
+      document.querySelectorAll("#fnc button").forEach(b=>b.onclick=()=>{t.fence=b.dataset.x;$("#fown").value="";document.querySelectorAll("#fnc button").forEach(y=>y.setAttribute("aria-pressed",y===b));});
+      const vn=$("#vnote"); if(vn) vn.oninput=()=>t.note=vn.value;
+      const fo=$("#fown"); if(fo) fo.oninput=()=>{t.fence=fo.value; document.querySelectorAll("#fnc button").forEach(y=>y.setAttribute("aria-pressed","false"));};
+      const tk=$("#tk"); if(tk) tk.onclick=()=>{ finish(); openTikkun(after); };
+      const bk=$("#bk"); if(bk) bk.onclick=()=>{step--;draw();};
+      $("#nx").onclick=()=>{ if(last){ finish(); closeSheet(after);} else {step++;draw();} };
+    });
+  };
+  let saved=false;
+  const finish=()=>{ if(saved) return; saved=true; state.journal.push({type:kind==="covenant"?"covenant":"teshuvah",w:w0,broken,triggers:t.triggers,fence:t.fence.trim(),note:t.note.trim()}); save(); render(); };
+  openSheet("Teshuvah", "", draw, {onClose:()=>{finish(); after&&after();}});
+}
+
+/* Tikkun HaKlali */
+function openTikkun(after){
+  openSheet("Tikkun HaKlali", `<div class="stack">
+    <p style="margin:0">Rebbe Nachman of Breslov gave these ten psalms as a remedy for this struggle. Say them in order, slowly, in any language you understand.</p>
+    <div class="choices">${TIKKUN.map(n=>`<a class="btn" href="https://www.sefaria.org/Psalms.${n}" target="_blank" rel="noopener">Tehillim ${n} ↗</a>`).join("")}</div>
+    <p class="note" style="margin:0">Before you start, it is customary to give a little tzedakah, and to say that you join yourself to all the true tzaddikim.</p>
+    <button class="btn primary block" id="tdone">I've said them</button></div>`,()=>$("#tdone").onclick=()=>closeSheet(after),{onClose:after});
+}
+
+/* Week review */
+function openWeekReview(){
+  const w=state.week, B=budget(w), S=spent(), breach=capBreach(state.days,w), ok=S<=B && !breach;
+  const streak = ok?0:state.overStreak+1;
+  const L=label(w), N=label(w+1);
+  const clean=state.days.filter(d=>!d.e.length).length;
+  const cov=covenant(w), kept=cov.map(()=>true);
+  openSheet("End of week", `<div class="stack">
+    <div class="eyebrow">Week ${w} · ${esc(L.en)}</div>
+    <h2 style="font-size:26px">${ok?(w>=FINAL?"Another week guarded.":"You climb a rung."):"You stay on this rung."}</h2>
+    <div class="card"><p style="margin:0" class="num">${S} of ${B} points used · ${clean} clean day${clean===1?"":"s"}</p>
+      ${breach?`<p style="margin:6px 0 0;color:var(--danger)">Content went above this world's limit.</p>`:""}
+      <p style="margin:6px 0 0">${ok?(w>=FINAL?"The ceiling stays at zero.":`Next: <b>${esc(N.en)}</b>, with a ceiling of ${budget(w+1)} points.`):"Repeating a week is part of the path, not a failure. Same ceiling, fresh start."}</p></div>
+    ${quoteHTML(pick(ok?"climb":"fall"))}
+    <div><label>Your covenant this week</label><div class="stack" style="gap:8px">${cov.map((c,i)=>`<div class="covrow"><span>${esc(c)}</span>
+      <div class="choices"><button data-ci="${i}" data-v="1" aria-pressed="true">Kept</button><button data-ci="${i}" data-v="0" aria-pressed="false">Not this week</button></div></div>`).join("")}</div></div>
+    <div><label for="refl">Cheshbon hanefesh: what helped this week, and what got in the way?</label><textarea id="refl"></textarea></div>
+    <button class="btn primary block" id="wdone">${ok?"Climb to the next rung":"Begin the week again"}</button>
+    ${!ok && streak>=3 && w>1?`<p class="muted" style="margin:0">That's ${streak} hard weeks in a row. Stepping back one rung is a wise move, not a defeat.</p><button class="btn block" id="wback">Step back to week ${w-1}</button>`:""}
+  </div>`,()=>{
+    document.querySelectorAll("[data-ci]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.ci; kept[i]=b.dataset.v==="1";
+      document.querySelectorAll(`[data-ci="${i}"]`).forEach(x=>x.setAttribute("aria-pressed", x===b)); });
+    const fin=(out)=>{ state.history.push({w,spent:S,budget:B,out,note:$("#refl").value.trim(),brit:{kept:kept.filter(Boolean).length,total:cov.length}});
+      if(out==="ascend"){ state.week=w+1; state.overStreak=0; } else if(out==="stepback"){ state.week=w-1; state.overStreak=0; } else state.overStreak=streak;
+      let ns=addDays(state.weekStart,7);
+      if(diffDays(ns,todayISO())>=7) ns=todayISO(); // away for more than a week: start the new week today
+      state.weekStart=ns; state.days=[]; save(); closeSheet(); render();
+      const broken=cov.filter((_,i)=>!kept[i]), up=()=>{ if(out==="ascend") ascendMoment(w); };
+      if(broken.length) openTeshuvah("covenant", up, broken, w); else up(); };
+    $("#wdone").onclick=()=>fin(ok?"ascend":"repeat");
+    const wb=$("#wback"); if(wb) wb.onclick=()=>fin("stepback");
+  },{noClose:true});
+}
+
+/* ============ SOS ============ */
+let sosTimer=null;
+function openSOS(){
+  let remain=600, qi=Math.floor(Math.random()*20);
+  const urgeQs=QUOTES.filter(q=>q.tags.includes("urge"));
+  const ch=state.chaver;
+  $("#layer").innerHTML=`<div class="sos-screen" role="dialog" aria-modal="true" aria-label="Urge help"><div class="sos-in">
+    <div class="row" style="justify-content:space-between"><div class="eyebrow">Ride the wave</div><button class="x" id="sx" aria-label="Close">×</button></div>
+    <h2 style="font-size:26px">An urge rises and falls like a wave. Stay with it for ten minutes.</h2>
+    <div class="breath" aria-hidden="true"><div class="ring"></div><div class="t" id="st">10:00</div><div class="cue" id="cue">Breathe in…</div></div>
+    <div style="height:14px"></div>
+    <div id="sq"></div>
+    <div class="eyebrow">Do one of these now</div>
+    <div class="acts">
+      <label class="act"><input type="checkbox"> <span><b>Stand up and leave the room.</b> “He fled and went outside” (Bereshit 39:12).</span></label>
+      <label class="act"><input type="checkbox"> <span><b>Put the phone in another room</b>, or hand it to someone.</span></label>
+      <label class="act"><input type="checkbox"> <span><b>Splash cold water on your face</b>, or take a short cold shower.</span></label>
+      <label class="act"><input type="checkbox"> <span><b>Say Tehillim 121</b>: “I lift my eyes to the mountains…” <a href="https://www.sefaria.org/Psalms.121" target="_blank" rel="noopener">Open ↗</a></span></label>
+      <label class="act"><input type="checkbox"> <span><b>Drag him to the study hall.</b> Learn one mishnah of Pirkei Avot.</span></label>
+    </div>
+    <section class="card stack"><div class="eyebrow">Your chaver</div>
+      ${ch.phone?`<div class="row" style="justify-content:space-between"><span><b>${esc(ch.name||"Chaver")}</b><br><span class="num" style="user-select:all">${esc(ch.phone)}</span></span><button class="btn" id="cp">Copy number</button></div>
+      <p class="muted" style="margin:0;font-size:13px">You don't have to explain. “Struggling right now” is enough.</p>`
+      :`<p class="muted" style="margin:0">Add a chaver in the Journal tab so their number is here when you need it.</p>`}
+    </section>
+    <button class="btn gold block" id="won">The urge passed</button>
+    <button class="btn block" id="more">I need five more minutes</button>
+  </div></div>`;
+  const tick=()=>{ remain=Math.max(0,remain-1); const m=Math.floor(remain/60), s=String(remain%60).padStart(2,"0"); const el=$("#st"); if(!el){clearInterval(sosTimer);return;} el.textContent=`${m}:${s}`;
+    const phase=(600-remain)%10; $("#cue").textContent= phase<4?"Breathe in…":"Breathe out slowly…";
+    if((600-remain)%25===0) showQ(); if(remain===0){ $("#cue").textContent="The wave has passed its peak."; } };
+  const showQ=()=>{ qi=(qi+1)%urgeQs.length; $("#sq").innerHTML=quoteHTML(urgeQs[qi]); };
+  showQ(); clearInterval(sosTimer); sosTimer=setInterval(tick,1000);
+  const close=()=>{ clearInterval(sosTimer); $("#layer").innerHTML=""; };
+  $("#sx").onclick=close;
+  $("#more").onclick=()=>{ remain+=300; };
+  const cp=$("#cp"); if(cp) cp.onclick=()=>{ try{ navigator.clipboard.writeText(ch.phone).then(()=>{cp.textContent="Copied";},()=>{cp.textContent="Select the number";}); }catch(e){ cp.textContent="Select the number"; } };
+  $("#won").onclick=()=>{ close(); state.victories++; save(); render();
+    moment({eyebrow:"Gevurah", title:"You conquered your inclination", he:"אֵיזֶהוּ גִבּוֹר? הַכּוֹבֵשׁ אֶת יִצְרוֹ",
+      sub:`Who is mighty? One who conquers his inclination (Avot 4:1). That makes ${state.victories} urges conquered, and each one makes the next one weaker.`}); };
+}
+
+/* ============ PIN lock ============ */
+async function hashPin(p){
+  try{ const b=await crypto.subtle.digest("SHA-256", new TextEncoder().encode("sulam:"+p));
+    return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join(""); }
+  catch(e){ let h=5381; for(const c of "sulam:"+p) h=((h<<5)+h+c.charCodeAt(0))|0; return "d"+(h>>>0).toString(16); }
+}
+function keypadHTML(id){
+  return `<div class="pin-dots" id="${id}-dots" aria-hidden="true">${"<i></i>".repeat(4)}</div><div class="pin-msg" id="${id}-msg" aria-live="polite"></div>
+  <div class="keypad" id="${id}">${[1,2,3,4,5,6,7,8,9,"",0,"⌫"].map(k=>k===""?"<span></span>":`<button data-k="${k}" aria-label="${k==="⌫"?"Delete":k}">${k}</button>`).join("")}</div>`;
+}
+function mountKeypad(id, onDone){
+  let v="";
+  const dots=()=>document.querySelectorAll(`#${id}-dots i`).forEach((d,i)=>d.classList.toggle("on",i<v.length));
+  const press=k=>{ if(k==="⌫") v=v.slice(0,-1); else if(/^\d$/.test(k) && v.length<4) v+=k; dots();
+    if(v.length===4){ const val=v; v=""; setTimeout(()=>{ dots(); onDone(val); },150); } };
+  document.querySelectorAll(`#${id} [data-k]`).forEach(b=>b.onclick=()=>press(b.dataset.k));
+  return {press, msg:t=>{ const m=$(`#${id}-msg`); if(m) m.textContent=t; }, shake:()=>{ const d=$(`#${id}-dots`); if(!d) return; d.classList.remove("shake"); void d.offsetWidth; d.classList.add("shake"); }};
+}
+let locked=false, activeKp=null;
+function unlock(){ locked=false; activeKp=null; document.body.classList.remove("locked"); const el=$("#lock"); el.hidden=true; el.innerHTML=""; }
+function showLock(){
+  if(!state.pinHash) return;
+  clearInterval(sosTimer); $("#layer").innerHTML="";
+  locked=true; document.body.classList.add("locked");
+  const el=$("#lock"); el.hidden=false;
+  el.innerHTML=`<div class="lock-in"><div class="brand">Sulam<span class="he" lang="he">סֻלָּם</span></div><p class="muted" style="margin:0">Enter your PIN</p>${keypadHTML("lk")}
+    <button class="btn ghost" id="forgot">Forgot PIN</button>
+    <div id="forgotBox" hidden class="stack"><p style="margin:0">Without the PIN, the only way in is to erase your journey from this device. This can't be undone.</p>
+    <div class="row" style="justify-content:center"><button class="btn" id="eraseYes" style="color:var(--danger);border-color:var(--danger)">Erase everything</button><button class="btn ghost" id="eraseNo">Try again</button></div></div></div>`;
+  activeKp=mountKeypad("lk", async v=>{ if(await hashPin(v)===state.pinHash) unlock(); else { activeKp.msg("That PIN isn't right. Try again."); activeKp.shake(); } });
+  $("#forgot").onclick=()=>{ $("#forgotBox").hidden=false; };
+  $("#eraseNo").onclick=()=>{ $("#forgotBox").hidden=true; };
+  $("#eraseYes").onclick=()=>{ try{localStorage.removeItem(KEY);}catch(e){} state=demoState(); unlock(); tab="today"; render(); openOnboarding(); };
+}
+function openSetPin(){
+  let first=null;
+  openSheet("Set a PIN", `<div class="stack" style="align-items:center;text-align:center"><p id="pinPrompt" style="margin:0">Choose a 4-digit PIN.</p>${keypadHTML("sp")}
+    <p class="muted" style="margin:0;font-size:13px">If you forget it, the only way back in is to erase your journey.</p></div>`,()=>{
+    activeKp=mountKeypad("sp", async v=>{
+      if(first===null){ first=v; $("#pinPrompt").textContent="Enter it again to confirm."; activeKp.msg(""); }
+      else if(v===first){ state.pinHash=await hashPin(v); save(); activeKp=null; closeSheet(); render(); }
+      else { first=null; $("#pinPrompt").textContent="Choose a 4-digit PIN."; activeKp.msg("Those didn't match. Start again."); activeKp.shake(); }
+    });
+  },{onClose:()=>{activeKp=null;}});
+}
+let hiddenAt=0;
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden) hiddenAt=Date.now();
+  else if(state.pinHash && !locked && hiddenAt && Date.now()-hiddenAt>60000) showLock();
+});
+
+/* ============ Wire up ============ */
+document.querySelectorAll(".tab[data-tab]").forEach(b=>b.onclick=()=>{ if(b.dataset.tab==="sos") return openSOS(); tab=b.dataset.tab; render(); });
+document.addEventListener("keydown",e=>{
+  if(activeKp && (/^\d$/.test(e.key)||e.key==="Backspace") && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)){ activeKp.press(e.key==="Backspace"?"⌫":e.key); e.preventDefault(); return; }
+  if(locked) return;
+  if(e.key==="Escape"){ const x=$("#xclose")||$("#sx"); x&&x.click(); }
+});
+/* Starfield: denser near the top of the sky, slow twinkle, still when reduced motion is on. */
+(function stars(){
+  const c=$("#stars"), ctx=c.getContext("2d"), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let st=[], dpr=1, last=0;
+  function size(){
+    dpr=Math.min(2,window.devicePixelRatio||1); c.width=innerWidth*dpr; c.height=innerHeight*dpr;
+    const n=Math.round(innerWidth*innerHeight/4800);
+    st=Array.from({length:n},()=>({x:Math.random(), y:Math.pow(Math.random(),1.7), r:Math.random()*1.05+.3, a:Math.random()*.6+.3, s:Math.random()*1.6+.4, o:Math.random()*6.28}));
+    draw(0);
+  }
+  function draw(t){
+    ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle="#FFF6E0";
+    for(const s of st){ const tw=reduce?1:(.6+.4*Math.sin(t/1000*s.s+s.o)); ctx.globalAlpha=s.a*tw*(1-s.y*.7);
+      ctx.beginPath(); ctx.arc(s.x*c.width, s.y*c.height, s.r*dpr, 0, 6.283); ctx.fill(); }
+  }
+  function loop(t){ if(t-last>66){ draw(t); last=t; } if(!document.hidden) requestAnimationFrame(loop); }
+  addEventListener("resize",size); size();
+  if(!reduce){ requestAnimationFrame(loop); document.addEventListener("visibilitychange",()=>{ if(!document.hidden) requestAnimationFrame(loop); }); }
+})();
+render();
+if(state.pinHash) showLock();
+</script>
+</body>
+</html>
