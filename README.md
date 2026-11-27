@@ -22,56 +22,60 @@ On first open it shows an **example journey** (week 10, Tiferet of Yetzirah) so 
 
 ### Two axes, one number
 
-Each content type has a weight:
+Content is grouped into five levels of intensity. Each time costs its level in points:
 
-| Content | Weight |
-|---|---|
-| Boy-girl (BG) | 5 |
-| Solo video (SV) | 4 |
-| Solo picture (SP) / Clothed video (CV) | 3 |
-| Clothed picture (CP) | 2 |
-| Imagination (I) | 1 |
+| Level | What it covers | Points |
+|---|---|---|
+| 5 | Explicit scenes with others | 5 |
+| 4 | Explicit scenes, solo | 4 |
+| 3 | Explicit images, or covered scenes | 3 |
+| 2 | Covered images | 2 |
+| 1 | Thoughts alone | 1 |
 
-A week's score is the sum of what was used. The weekly **ceiling** starts at 35 (7×BG) and drops by **one point a week** to 0. This reproduces the de-escalation path exactly:
+The app shows only the level number. The description appears only where a choice is made: setup, check-in and the Method page.
 
-- Week 1: 7×BG = 35
-- Week 2: 6×BG + 1×SV = 34
-- Week 3: 5×BG + 2×SV = 33
+A week's score is the sum of what was used. The weekly **ceiling** starts at 35 (seven times at level 5) and drops by **one point a week** to 0:
+
+- Week 1: 7×L5 = 35
+- Week 2: 6×L5 + 1×L4 = 34
+- Week 3: 5×L5 + 2×L4 = 33
 - …
-- Week 8: 7×SV = 28
+- Week 8: 7×L4 = 28
 - …
-- Week 35: 1×I = 1
+- Week 35: 1×L1 = 1
 - Week 36: 0
 
-Frequency and content type both count. Each world also has a **cap on content type**: in Yetzirah nothing worse than solo video, however many points remain.
+Frequency and intensity both count. Each world also has a **level limit**: in Yetzirah nothing above level 4, however many points remain.
 
 ### Five worlds × seven weeks
 
 | Weeks | World | Transition | Kedushah teaching |
 |---|---|---|---|
-| 1–7 | Asiyah, World of Action | BG → SV | She is not content |
-| 8–14 | Yetzirah, World of Formation | SV → SP/CV | Not good to be alone |
-| 15–21 | Beriah, World of Creation | SP/CV → CP | In the image of God |
-| 22–28 | Atzilut, World of Emanation | CP → I | One soul in two bodies |
-| 29–35 | Adam Kadmon, Primordial Will | I → 0 | Building the home |
+| 1–7 | Asiyah, World of Action | L5 → L4 | She is not content |
+| 8–14 | Yetzirah, World of Formation | L4 → L3 | Not good to be alone |
+| 15–21 | Beriah, World of Creation | L3 → L2 | In the image of God |
+| 22–28 | Atzilut, World of Emanation | L2 → L1 | One soul in two bodies |
+| 29–35 | Adam Kadmon, Primordial Will | L1 → 0 | Building the home |
 | 36+ | Shomer HaBrit | Ceiling of 0, guarded | |
 
 Within each world the seven weeks follow the seven lower sefirot, Chesed to Malchut, like the counting of the Omer. Each week has a middah and a practice ("Gevurah of Asiyah").
 
 ### Placement
 
-Setup asks for last week's frequency, the usual content type and the user's life stage. The starting week is the latest week whose points ceiling *and* content cap both cover the baseline. The ceiling is never set above the user's own baseline, so the app never gives anyone more room than they were already taking.
+Setup asks for last week's frequency, the usual level and the user's life stage. The starting week is the latest week whose points ceiling *and* level limit both cover the baseline. The ceiling is never set above the user's own baseline, so the app never gives anyone more room than they were already taking.
 
 ### Falling and returning
 
 - A week under the ceiling climbs one rung. A week over it repeats. After three hard weeks in a row, the app offers to step back one rung.
 - **A fall never erases progress.**
-- Going over the ceiling, or above the world's content cap, opens a **teshuvah flow** following the Rambam (Hilchot Teshuvah 2:2): regret, with triggers to pick; confession; and a fence for the future. It ends with Tikkun HaKlali.
+- Going over the ceiling, or above the world's level limit, opens a **teshuvah flow** following the Rambam (Hilchot Teshuvah 2:2): regret, with triggers to pick; confession; and a fence for the future. It ends with Tikkun HaKlali.
 - Breaking a **covenant commitment** opens the same flow.
 
 ### The kedushah strand
 
 Each world adds one commitment to the user's covenant, and commitments stay in force once added. The wording depends on life stage: single or dating (preparing for marriage), or married (elevating the marriage). The week review asks about each commitment. Covenant results are recorded but do not affect climbing.
+
+The full explanation of the method, including why it is gradual and how the deconditioning works, is in the app's **Method** page (Ladder → How the method works, or open `index.html#method`).
 
 ## Features
 
@@ -86,7 +90,7 @@ Each world adds one commitment to the user's covenant, and commitments stay in f
 
 - **Prototype.** State lives in the browser's `localStorage`, unencrypted. The PIN stops someone casually opening the app; it does not protect the data.
 - **Quotes need verifying.** The English renderings are the author's own, and lines marked "summary" are paraphrases. Check every source on Sefaria, the Hebrew especially, before relying on it.
-- **Rabbinic review needed.** The gradual ceiling is framed as a limit, never a permission (Kiddushin 21b; Rambam, Shemonah Perakim ch. 4). A rav should review this framing and the kedushah strand before release.
+- **Rabbinic review needed.** The gradual ceiling is framed as a limit, never a permission (Kiddushin 21b; Shemot 23:29–30; Moreh Nevuchim III:32). A rav should review this framing and the kedushah strand before release.
 - **Not a medical device.** The app supports teshuvah and recovery and does not replace a therapist. A clinician who works with compulsive sexual behaviour should review it.
 - **Kabbalistic framing.** The five worlds and the sefirot are used as a map for the journey, inspired by Kabbalah rather than a teaching of it.
 

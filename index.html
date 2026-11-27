@@ -18,7 +18,7 @@
   --ink:#EFEADF; --muted:#A3A6C4; --line:rgba(226,188,110,.22); --line-soft:rgba(255,255,255,.09);
   --gold:#E2BC6E; --gold-bright:#F8E4AE; --gold-deep:#A57A2E; --gold-soft:rgba(226,188,110,.13);
   --accent:#E2BC6E; --accent-ink:#1A1306; --gevurah:#C2423A; --danger:#F08A7E; --danger-soft:rgba(240,138,126,.14);
-  --t-BG:#E07A62; --t-SV:#E3A452; --t-SP:#C9C45A; --t-CV:#C9C45A; --t-CP:#62BE97; --t-I:#7CA6E6; --clean:#E2BC6E;
+  --t-L5:#E07A62; --t-L4:#E3A452; --t-L3:#C9C45A; --t-L2:#62BE97; --t-L1:#7CA6E6; --clean:#E2BC6E;
   --world:#D07A3A; --lift:0;
   --font-display:"Cormorant Garamond", "Frank Ruhl Libre", Georgia, serif;
   --font-inscr:"Cinzel", "Cormorant Garamond", Georgia, serif;
@@ -237,6 +237,32 @@ body.locked .app,body.locked .tabs,body.locked #layer{visibility:hidden}
 .keypad button{width:68px;height:68px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2);font-size:26px;font-family:var(--font-display);font-weight:600;color:var(--ink)}
 .keypad button:active{background:var(--gold-soft)}
 
+/* method page */
+.method .back{padding-left:0}
+.mhead h1{font-size:46px;margin-top:4px}
+.mhead .he{font-size:24px;color:var(--gold);display:block;text-align:left;margin:8px 0 0}
+.mhead p:last-child{margin:12px 0 0}
+.method .card h2{font-size:27px;margin-bottom:8px}
+.method .card p{margin:0 0 10px}
+.method .card p:last-child{margin-bottom:0}
+.method .small{font-size:13px}
+.forces{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:6px 0 14px}
+.forces > div{border-left:2px solid var(--gold);padding-left:12px;min-width:0}
+.forces h3{font-family:var(--font-inscr);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px}
+.forces p{margin:0;font-size:14px}
+.mtable{overflow-x:auto;margin:6px 0 10px;-webkit-overflow-scrolling:touch}
+.mtable table{width:100%;border-collapse:collapse;font-size:13.5px}
+.mtable th{text-align:left;font-family:var(--font-inscr);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line)}
+.mtable td{padding:8px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.mtable tr:last-child td{border-bottom:none}
+.lvl{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;font-weight:700;font-size:12px;color:var(--accent-ink)}
+.mlist{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px}
+.tierpick{display:flex;flex-direction:column;gap:6px}
+.tierpick button{display:flex;justify-content:space-between;gap:10px;align-items:baseline;text-align:left;border:1px solid var(--line-soft);background:var(--surface-2);border-radius:10px;padding:9px 12px}
+.tierpick button span{font-size:12.5px;color:var(--muted)}
+.tierpick button[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft)}
+.tierpick button[aria-pressed="true"] b{color:var(--gold-bright)}
+
 /* kedushah strand: a rose-gold second light, for the honour of women and the Shechinah between husband and wife */
 .kedushah{border-color:rgba(233,182,166,.26);background:radial-gradient(120% 80% at 100% 0%,rgba(233,170,150,.11),transparent 60%),var(--surface)}
 .kedushah > .eyebrow,.covenant .eyebrow{color:#E9B6A6}
@@ -277,22 +303,27 @@ body.locked .app,body.locked .tabs,body.locked #layer{visibility:hidden}
 <script>
 /* ============ Model ============ */
 const TIERS = {
-  BG:{w:5,name:"Boy-girl"}, SV:{w:4,name:"Solo video"}, SP:{w:3,name:"Solo picture"},
-  CV:{w:3,name:"Clothed video"}, CP:{w:2,name:"Clothed picture"}, I:{w:1,name:"Imagination"}
+  // Discreet names everywhere; the short description shows only where a choice is made (setup, check-in, Method).
+  L5:{w:5,name:"Level 5",desc:"Explicit scenes with others"},
+  L4:{w:4,name:"Level 4",desc:"Explicit scenes, solo"},
+  L3:{w:3,name:"Level 3",desc:"Explicit images, or covered scenes"},
+  L2:{w:2,name:"Level 2",desc:"Covered images"},
+  L1:{w:1,name:"Level 1",desc:"Thoughts alone"}
 };
-const TIER_ORDER = ["BG","SV","SP","CV","CP","I"];
+const TIER_ORDER = ["L5","L4","L3","L2","L1"];
+const OLD_TIERS = {BG:"L5",SV:"L4",SP:"L3",CV:"L3",CP:"L2",I:"L1"}; // migrate saved data
 const PHASE_MIX = [ // [higher tier label, lower tier label] for each world
-  ["BG","SV"], ["SV","SP/CV"], ["SP/CV","CP"], ["CP","I"], ["I",null]
+  ["L5","L4"], ["L4","L3"], ["L3","L2"], ["L2","L1"], ["L1",null]
 ];
 const WORLDS = [
   {name:"Asiyah", he:"עֲשִׂיָּה", sheb:"שבעשיה", en:"World of Action",
-   desc:"The work is in the body and the habit. Here you change what you do. Boy-girl content gives way to solo video."},
+   desc:"The work is in the body and the habit. Here you change what you do. Level 5 gives way to level 4."},
   {name:"Yetzirah", he:"יְצִירָה", sheb:"שביצירה", en:"World of Formation",
-   desc:"The work moves into feeling. You start to notice the loneliness or stress that comes before the urge. Solo video gives way to solo pictures or clothed video."},
+   desc:"The work moves into feeling. You start to notice the loneliness or stress that comes before the urge. Level 4 gives way to level 3."},
   {name:"Beriah", he:"בְּרִיאָה", sheb:"שבבריאה", en:"World of Creation",
-   desc:"The work moves into the mind. Images lose their grip as thought is reshaped. Pictures and clothed video give way to clothed pictures."},
+   desc:"The work moves into the mind. Images lose their grip as thought is reshaped. Level 3 gives way to level 2."},
   {name:"Atzilut", he:"אֲצִילוּת", sheb:"שבאצילות", en:"World of Emanation",
-   desc:"Very little stands between you and the Source. Clothed pictures give way to imagination alone."},
+   desc:"Very little stands between you and the Source. Level 2 gives way to level 1, thoughts alone."},
   {name:"Adam Kadmon", he:"אָדָם קַדְמוֹן", sheb:"שבאדם קדמון", en:"Primordial Will",
    desc:"Even imagination is given back. Frequency falls week by week until nothing remains but will."}
 ];
@@ -387,7 +418,7 @@ const KEY = "sulam.v1";
 let state;
 function demoState(){
   return {
-    demo:true, baseline:35, week:10, days:[{e:[{t:"SV",n:1}]},{e:[]},{e:[{t:"SV",n:1}]},{e:[{t:"SP",n:1}]}],
+    demo:true, baseline:35, week:10, days:[{e:[{t:"L4",n:1}]},{e:[]},{e:[{t:"L4",n:1}]},{e:[{t:"L3",n:1}]}],
     history:[
       {w:6,spent:27,budget:30,out:"ascend",note:"Mornings were easy. Nights are the battle."},
       {w:7,spent:31,budget:29,out:"repeat",note:"Three late nights in a row. Phone in bed every time."},
@@ -406,7 +437,8 @@ function freshState(baseline, week, stage="single"){
 }
 function load(){
   try{ const s=localStorage.getItem(KEY);
-    if(s){ const o=JSON.parse(s); if(!o.weekStart) o.weekStart=addDays(realToday(),-((o.days&&o.days.length)||0)); if(!o.stage) o.stage="single"; return o; }
+    if(s){ const o=JSON.parse(s); if(!o.weekStart) o.weekStart=addDays(realToday(),-((o.days&&o.days.length)||0)); if(!o.stage) o.stage="single";
+      (o.days||[]).forEach(d=>d.e.forEach(x=>{ if(OLD_TIERS[x.t]) x.t=OLD_TIERS[x.t]; })); return o; }
   }catch(e){}
   return demoState();
 }
@@ -436,17 +468,17 @@ function sefIdx(w){ return (w-1)%7; }
 function rawBudget(w){ return Math.max(0, FINAL - w); }
 function budget(w){ return Math.min(rawBudget(w), state.baseline ?? 35); }
 function maxWeight(w){ return w>=FINAL ? 0 : 6 - phaseOf(w); }
-function mixText(w){
-  if(w>=FINAL) return "0. Guard what you have built.";
-  if(budget(w)<rawBudget(w)) return `up to ${budget(w)} points (your baseline)`;
-  const [hi,lo] = PHASE_MIX[phaseOf(w)-1], j = sefIdx(w), parts=[];
-  if(7-j>0) parts.push(`${7-j}×${hi}`);
-  if(lo && j>0) parts.push(`${j}×${lo}`);
+function mixText(w, raw=false){
+  if(w>=FINAL) return raw ? "0" : "0. Guard what you have built.";
+  if(!raw && budget(w)<rawBudget(w)) return `up to ${budget(w)} points (your baseline)`;
+  const [hi,lo] = PHASE_MIX[phaseOf(w)-1], j = sefIdx(w), parts=[], n=t=>"L"+TIERS[t].w;
+  if(7-j>0) parts.push(`${7-j}×${n(hi)}`);
+  if(lo && j>0) parts.push(`${j}×${n(lo)}`);
   return parts.join(" + ");
 }
 function worstAllowed(w){
   const m=maxWeight(w); if(!m) return "none";
-  return TIER_ORDER.filter(t=>TIERS[t].w===m).map(t=>TIERS[t].name).join(" or ");
+  return "Level "+m;
 }
 function label(w){
   if(w>=FINAL) return {en:"Shomer HaBrit", he:"שׁוֹמֵר הַבְּרִית", sef:null, world:null};
@@ -522,14 +554,20 @@ function ascendMoment(w){
 }
 
 /* ============ Views ============ */
-let tab = "today";
+let tab = "today", prevTab = "today";
+function go(t){
+  if(t==="method" && tab!=="method") prevTab=tab;
+  tab=t;
+  try{ if(t==="method"){ if(location.hash!=="#method") location.hash="method"; } else if(location.hash==="#method") location.hash=""; }catch(e){}
+  render();
+}
 function render(){
   applyWorld();
   document.querySelectorAll(".tab[data-tab]").forEach(b=>{ if(b.dataset.tab!=="sos") b.setAttribute("aria-current", b.dataset.tab===tab?"page":"false"); });
   const app=$("#app");
   const banner = state.demo ? `<div class="banner"><span><b>Example journey.</b> These numbers are sample data, so you can see how it works.</span><button class="btn gold" id="startOwn">Start my own</button></div>` : "";
   const head = `<header class="top"><div class="brand">Sulam<span class="he" lang="he">סֻלָּם</span></div><span class="pill num">Week ${Math.min(state.week,FINAL)}${state.week>=FINAL?"+":""} of 35</span></header>`;
-  app.innerHTML = `<div class="stack">${banner}${head}${({today,ladder,wisdom,journal})[tab]()}</div>`;
+  app.innerHTML = `<div class="stack">${banner}${head}${({today,ladder,wisdom,journal,method})[tab]()}</div>`;
   const so=$("#startOwn"); if(so) so.onclick=openOnboarding;
   bind[tab] && bind[tab]();
   window.scrollTo(0,0);
@@ -543,7 +581,7 @@ function today(){
   const dots = Array.from({length:7},(_,i)=>{
     const iso=addDays(state.weekStart,i), nm=WD_SHORT[weekdayOf(iso)];
     if(i<state.days.length){ const d=state.days[i], wt=worstOfDay(d);
-      return wt ? `<div class="day"><span class="dot slip" style="background:${tierColor(wt)}" title="${TIERS[wt].name}">${wt}</span>${nm}</div>`
+      return wt ? `<div class="day"><span class="dot slip" style="background:${tierColor(wt)}" title="${TIERS[wt].name}">${TIERS[wt].w}</span>${nm}</div>`
                 : `<div class="day"><span class="dot clean" title="Clean">✓</span>${nm}</div>`; }
     if(i===ti) return `<div class="day"><span class="dot today"></span><b style="color:var(--accent)">Today</b></div>`;
     if(i<ti) return `<div class="day"><span class="dot missed" title="Not checked in"></span>${nm}</div>`;
@@ -602,10 +640,95 @@ function kedushahCard(w){
       ${cov.map((c,i)=>`<div class="cov ${i===cov.length-1 && w<FINAL?"new":""}"><span class="seal num">${i+1}</span><span>${esc(c)}${i===cov.length-1 && w<FINAL?` <em>New in ${WORLDS[p-1].name}</em>`:""}</span></div>`).join("")}
     </div></section>`;
 }
+function method(){
+  const ex=[1,2,3,7,8,15,22,29,35,36].map(w=>`<tr><td class="num">${w>=FINAL?"36+":w}</td><td>${w>=FINAL?"Shomer HaBrit":esc(label(w).en)}</td><td class="num">${rawBudget(w)}</td><td class="num">${mixText(w,true)}</td></tr>`).join("");
+  const lv=TIER_ORDER.map(t=>`<tr><td><span class="lvl" style="background:${tierColor(t)}">${TIERS[t].w}</span></td><td>${TIERS[t].desc}</td><td class="num">${TIERS[t].w}</td></tr>`).join("");
+  const wl=WORLDS.map((wd,i)=>`<tr><td class="num">${i*7+1}–${i*7+7}</td><td><b>${wd.name}</b><br><span class="muted">${esc(wd.en)}</span></td><td class="num">${i<4?`L${5-i} → L${4-i}`:"L1 → 0"}</td><td>${esc(KEDUSHAH[i].title)}</td></tr>`).join("");
+  const p3=placeWeek(3,"L5");
+  return `<div class="method stack">
+  <div><button class="btn ghost back" id="mback">← Back</button></div>
+  <section class="mhead">
+    <div class="eyebrow">The method</div>
+    <h1>Little by little</h1>
+    <p class="he" lang="he">מְעַט מְעַט אֲגָרְשֶׁנּוּ מִפָּנֶיךָ</p>
+    <p class="thesis">“Little by little I will drive them out before you, until you have increased and possess the land.” (Shemot 23:30)</p>
+    <p>Sulam does not ask you to stop everything overnight. It lowers the ceiling one point a week, for thirty-five weeks, until it reaches zero. This page explains how that works and why.</p>
+  </section>
+
+  <section class="card"><h2>Why step down, not stop at once</h2>
+    <p>Many who try to stop all at once fall within days. The fall feels like total failure, and total failure invites a binge. Psychologists call this the abstinence violation effect. Sulam gives you somewhere to stand: a fall costs points, never your whole journey.</p>
+    <p>The Torah knows this path. God led Israel out of Egypt by the long road, “lest the people regret it when they see war, and return to Egypt” (Shemot 13:17). He drove out the nations of Canaan “little by little” (Shemot 23:29–30). The Rambam explains that a person cannot pass suddenly from one extreme to its opposite, so the Torah leads people step by step (Moreh Nevuchim III:32).</p>
+    <p class="note">Each ceiling is a limit, never a permission. The Torah speaks to a person where they are (Kiddushin 21b), but every point you leave unused is a victory.</p>
+  </section>
+
+  <section class="card"><h2>How the deconditioning works</h2>
+    <div class="forces">
+      <div><h3>Intensity</h3><p>With repeated exposure, the mind needs more intensity to feel the same pull. That is why use tends to escalate. Sulam runs this in reverse: each world asks the mind to settle for a gentler level, until the old intensity no longer feels normal.</p></div>
+      <div><h3>Frequency</h3><p>Every time repeats a loop: cue, urge, act, relief. Each day skipped and each urge outlasted weakens it. Urges rise and fall like waves, and the urge timer lets you learn that from experience.</p></div>
+      <div><h3>Awareness</h3><p>The daily check-in, and the triggers you name after a fall, show you your patterns: the late nights, the loneliness, the phone in bed. You cannot guard a door you do not know is there.</p></div>
+      <div><h3>Replacement</h3><p>Taking something away leaves an emptiness that pulls you back. The covenant fills it with what the craving was standing in for: real connection, Torah, and marriage. “I created the evil inclination, and I created Torah as its remedy” (Kiddushin 30b).</p></div>
+    </div>
+    <p class="muted small">Sulam draws on ideas from habit change and relapse prevention. The method itself has not been clinically tested. It supports a therapist's help and does not replace it.</p>
+  </section>
+
+  <section class="card"><h2>The five levels</h2>
+    <p>Content is grouped by intensity. Each time costs its level in points.</p>
+    <div class="mtable"><table><thead><tr><th>Level</th><th>What it covers</th><th>Points</th></tr></thead><tbody>${lv}</tbody></table></div>
+    <p class="muted small">Elsewhere the app shows only the level number.</p>
+  </section>
+
+  <section class="card"><h2>The weekly ceiling</h2>
+    <p>Week 1 has a ceiling of 35 points: seven times at level 5. Every week it drops by one point. Each world swaps one time at the higher level for one at the gentler level each week. After week 35, the ceiling is zero.</p>
+    <div class="mtable"><table><thead><tr><th>Week</th><th>Rung</th><th>Ceiling</th><th>One way to stay within it</th></tr></thead><tbody>${ex}</tbody></table></div>
+    <p class="muted small">“L4” means one time at level 4. You can stay under the ceiling any way you like: fewer times, a gentler level, or not at all.</p>
+  </section>
+
+  <section class="card"><h2>Two limits every week</h2>
+    <p><b>The points ceiling</b> limits how much in total. <b>The level limit</b> limits how intense: each world closes off the level above it. In Yetzirah, for example, nothing above level 4 is within the limit, however many points remain.</p>
+  </section>
+
+  <section class="card"><h2>Climbing, repeating and stepping back</h2>
+    <ul class="mlist">
+      <li><b>Climb:</b> a week under the ceiling and within the level limit takes you up one rung.</li>
+      <li><b>Repeat:</b> a week over either limit is repeated, with the same ceiling and a fresh start.</li>
+      <li><b>Step back:</b> after three hard weeks in a row, you are offered one rung back. This is wisdom, not defeat.</li>
+      <li><b>Never back to zero:</b> no fall erases your progress. Going over opens the teshuvah flow: regret, confession and resolve.</li>
+    </ul>
+  </section>
+
+  <section class="card"><h2>Where you start</h2>
+    <p>Setup asks how many times you fell in the last week and the most intense level, usually. You start on the highest rung whose ceiling and level limit both cover where you are now. Your ceiling is never set above your own baseline, so the app never gives you more room than you were already taking.</p>
+    <p class="muted">For example, three times a week at level 5 is 15 points. That starts at week ${p3.week}, ${esc(label(p3.week).en)}, with a ceiling of 15. The level limit tightens with each world. The ceiling stays at 15 until week 21, then falls by one point a week like everyone else's.</p>
+  </section>
+
+  <section class="card"><h2>Five worlds, seven weeks each</h2>
+    <p>The climb passes through the five worlds of Kabbalah, from Asiyah, the world of action, to Adam Kadmon, primordial will. Each world lasts seven weeks, one for each middah from Chesed to Malchut, like the counting of the Omer.</p>
+    <div class="mtable"><table><thead><tr><th>Weeks</th><th>World</th><th>Levels</th><th>Kedushah</th></tr></thead><tbody>${wl}</tbody></table></div>
+  </section>
+
+  <section class="card"><h2>The covenant</h2>
+    <p>Each world adds one commitment to your covenant, and it stays in force for the rest of the climb. The commitments are about honouring women, ending what pulls you away from marriage, and building real closeness, worded for single or married life. The week review asks about each one. The covenant doesn't change your rung, and if you break a commitment, the teshuvah flow helps you return.</p>
+  </section>
+
+  <section class="card"><h2>The summit</h2>
+    <p>From week 36 the ceiling is zero. You are Shomer HaBrit, a guardian of the covenant, like Yosef HaTzaddik. Each clean week is a week guarded.</p>
+  </section>
+
+  <section class="card"><h2>What this method is not</h2>
+    <ul class="mlist">
+      <li>It is not permission. The ceiling describes where you are, not what is allowed.</li>
+      <li>It is not a replacement for your rav, for a therapist, or for the people who love you.</li>
+      <li>It is not a verdict on who you are. “The righteous one falls seven times, and rises” (Mishlei 24:16).</li>
+    </ul>
+  </section>
+  <button class="btn primary block" data-go="today">Back to today</button>
+  </div>`;
+}
 function ladder(){
   const w=state.week; let html=`<section><div class="eyebrow">Your ascent</div><h1 style="font-size:28px">Five worlds, thirty-five rungs</h1>
   <p class="thesis" style="margin:8px 0 0">Who is mighty? One who conquers his inclination. Master this battle, and every other becomes yours.</p>
-  <p class="muted" style="margin:10px 0 0">Each week the ceiling drops by one point. Each world takes seven weeks, one for each middah from Chesed to Malchut, like the counting of the Omer. Each world also adds one commitment to your covenant, toward ${track()==="married"?"a deeper marriage":"the marriage you are preparing for"}.</p></section>`;
+  <p class="muted" style="margin:10px 0 0">Each week the ceiling drops by one point. Each world takes seven weeks, one for each middah from Chesed to Malchut, like the counting of the Omer. Each world also adds one commitment to your covenant, toward ${track()==="married"?"a deeper marriage":"the marriage you are preparing for"}.</p>
+  <button class="btn block" id="toMethod" style="margin-top:14px">How the method works</button></section>`;
   html += `<div class="summit ${w>=FINAL?"reached":""}"><div class="he" lang="he" style="font-size:22px;color:var(--gold)">שׁוֹמֵר הַבְּרִית</div><b>Shomer HaBrit</b><div class="muted" style="font-size:13px">Week 36 and beyond: a ceiling of zero, guarded.</div></div>`;
   for(let p=5;p>=1;p--){
     const wd=WORLDS[p-1];
@@ -678,6 +801,8 @@ function journal(){
 
 const bind = {
   today(){ const c=$("#checkin"); if(c) c.onclick=openCheckin; const r=$("#review"); if(r) r.onclick=openWeekReview; $("#tikkun").onclick=()=>openTikkun(); },
+  ladder(){ $("#toMethod").onclick=()=>go("method"); },
+  method(){ $("#mback").onclick=()=>go(prevTab||"today"); document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go)); },
   wisdom(){ document.querySelectorAll("[data-tag]").forEach(b=>b.onclick=()=>{wisdomTag=b.dataset.tag; render();}); },
   journal(){
     $("#savechaver").onclick=()=>{ state.chaver={name:$("#cname").value.trim(),phone:$("#cphone").value.trim()}; save(); $("#savechaver").textContent="Saved"; };
@@ -709,19 +834,20 @@ function setBody(html, mount){ $("#sheetBody").innerHTML=html; $(".sheet").scrol
 
 /* Onboarding */
 function openOnboarding(){
-  const ob={times:7,tier:"BG",stage:"single"};
+  const ob={times:7,tier:"L5",stage:"single"};
   const s1=()=>setBody(`<div class="steps"><i class="on"></i><i></i><i></i></div><div class="stack">
     <p class="thesis" style="margin:0;font-size:20px;color:var(--ink)">Who is mighty? One who conquers his inclination.</p>
     <p style="margin:0;font-size:16px">Sulam is a ladder out of pornography, one rung a week, guided by the sages. This is the battle that trains every other. It is also preparation for something greater: honouring women as created in God's image, and a marriage where two souls become one.</p>
-    <p style="margin:0">Each week has a <b>ceiling</b> of points. Boy-girl content costs 5, solo video 4, solo picture or clothed video 3, clothed picture 2 and imagination 1. The ceiling drops by one point every week until it reaches zero.</p>
-    <p class="note" style="margin:0">The ceiling is a limit, never a permission. The Torah speaks to a person where they are (Kiddushin 21b), and the Rambam teaches that character is changed step by step. Speak with your rav about this approach, and with a therapist if you can.</p>
+    <p style="margin:0">Content is grouped into five levels, from level 5, the most intense, to level 1, thoughts alone. Each time costs its level in points. Each week has a <b>ceiling</b> of points, and it drops by one point every week until it reaches zero.</p>
+    <p class="note" style="margin:0">The ceiling is a limit, never a permission. The Torah speaks to a person where they are (Kiddushin 21b), and God freed Israel from the nations of Canaan “little by little” (Shemot 23:30). Speak with your rav about this approach, and with a therapist if you can.</p>
     <p class="muted" style="margin:0">Everything you enter stays on this device.</p>
-    <button class="btn primary block" id="n1">Find my starting rung</button></div>`,()=>$("#n1").onclick=s2);
+    <button class="btn primary block" id="n1">Find my starting rung</button>
+    <button class="btn ghost block" id="nm">Read how the method works</button></div>`,()=>{ $("#n1").onclick=s2; $("#nm").onclick=()=>{ closeSheet(); go("method"); }; });
   const s2=()=>setBody(`<div class="steps"><i class="on"></i><i class="on"></i><i></i></div><div class="stack">
     <p style="margin:0;font-size:16px">Be honest. Over the last seven days, how many times did you fall?</p>
     <div class="row" style="justify-content:center"><div class="stepper"><button id="tm" aria-label="Fewer">−</button><b class="num big" id="tv" style="font-size:44px;min-width:60px">${ob.times}</b><button id="tp" aria-label="More">+</button></div></div>
-    <p style="margin:0">What did you usually watch?</p>
-    <div class="choices" id="tch">${TIER_ORDER.map(t=>`<button data-t="${t}" aria-pressed="${t===ob.tier}">${TIERS[t].name}</button>`).join("")}</div>
+    <p style="margin:0">What was the most intense level, usually?</p>
+    <div class="tierpick" id="tch">${TIER_ORDER.map(t=>`<button data-t="${t}" aria-pressed="${t===ob.tier}"><b>${TIERS[t].name}</b><span>${TIERS[t].desc}</span></button>`).join("")}</div>
     <p style="margin:0">Where are you in life?</p>
     <div class="choices" id="sch">${Object.entries(STAGES).map(([k,v])=>`<button data-s="${k}" aria-pressed="${k===ob.stage}">${v}</button>`).join("")}</div>
     <button class="btn primary block" id="n2">Place me on the ladder</button></div>`,()=>{
@@ -738,7 +864,7 @@ function openOnboarding(){
     setBody(`<div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i></div><div class="stack">
       <div class="eyebrow">Your starting rung</div>
       <h2 style="font-size:28px">Week ${Math.min(pl.week,FINAL)}: ${esc(L.en)}</h2><span class="he" lang="he" style="font-size:19px;color:var(--muted)">${L.he}</span>
-      <div class="card"><p style="margin:0">Your baseline: <b class="num">${ob.times}×${ob.tier} = ${ob.times*TIERS[ob.tier].w} points</b>.</p>
+      <div class="card"><p style="margin:0">Your baseline: <b class="num">${ob.times} × level ${TIERS[ob.tier].w} = ${ob.times*TIERS[ob.tier].w} points</b>.</p>
       <p style="margin:6px 0 0">First ceiling: <b class="num">${B} points</b>. Worst allowed: <b>${worst}</b>.</p>
       ${pl.week<FINAL?`<p style="margin:6px 0 0" class="muted">Path: ${mix}. Your ceiling will never be higher than your baseline.</p>`:""}
       ${ob.times*TIERS[ob.tier].w>35?`<p style="margin:6px 0 0" class="muted">Your baseline is above the top of the ladder, so you start on the first rung. The first weeks will be the hardest. Lean on your chaver.</p>`:""}</div>
@@ -761,7 +887,7 @@ function openCheckin(){
     <button class="btn gold block" id="clean">A clean day</button>
     <div class="eyebrow" style="margin-top:4px">Or log what happened</div>
     <div class="tierlist">${TIER_ORDER.map(t=>`<div class="tierrow"><i style="background:${tierColor(t)}"></i><div><b>${TIERS[t].name}</b>
-      <small class="${TIERS[t].w>maxWeight(w)?"warn":""}">${TIERS[t].w} pts${TIERS[t].w>maxWeight(w)?" · above this world's limit":""}</small></div>
+      <small>${TIERS[t].desc} · ${TIERS[t].w} pt${TIERS[t].w===1?"":"s"}</small>${TIERS[t].w>maxWeight(w)?`<small class="warn">Above this world's limit</small>`:""}</div>
       <div class="stepper"><button data-m="${t}" aria-label="Less ${TIERS[t].name}">−</button><b class="num">${counts[t]}</b><button data-p="${t}" aria-label="More ${TIERS[t].name}">+</button></div></div>`).join("")}</div>
     <button class="btn primary block" id="logit" ${pts?"":"disabled"}>Log ${pts} point${pts===1?"":"s"}</button></div>`;
   };
@@ -970,7 +1096,9 @@ document.addEventListener("visibilitychange",()=>{
 });
 
 /* ============ Wire up ============ */
-document.querySelectorAll(".tab[data-tab]").forEach(b=>b.onclick=()=>{ if(b.dataset.tab==="sos") return openSOS(); tab=b.dataset.tab; render(); });
+document.querySelectorAll(".tab[data-tab]").forEach(b=>b.onclick=()=>{ if(b.dataset.tab==="sos") return openSOS(); go(b.dataset.tab); });
+if(location.hash==="#method") tab="method";
+addEventListener("hashchange",()=>{ if(location.hash==="#method" && tab!=="method") go("method"); else if(location.hash!=="#method" && tab==="method") go(prevTab||"today"); });
 document.addEventListener("keydown",e=>{
   if(activeKp && (/^\d$/.test(e.key)||e.key==="Backspace") && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)){ activeKp.press(e.key==="Backspace"?"⌫":e.key); e.preventDefault(); return; }
   if(locked) return;
