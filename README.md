@@ -8,7 +8,9 @@ This repository holds a **clickable prototype**: a single `index.html` with no b
 
 ## Run it
 
-Open `index.html` in a browser. Or serve the folder:
+**Try it online: https://archaejon.github.io/sulam/**
+
+Or open `index.html` in a browser. Or serve the folder:
 
 ```bash
 python3 -m http.server 8000
